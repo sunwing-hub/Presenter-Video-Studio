@@ -1,0 +1,11 @@
+{
+  "version": 5,
+  "canvas": { "width": 1920, "height": 1080, "aspectRatio": "16/9" },
+  "duration": 4,
+  "cues": [],
+  "canvasLayers": [
+    { "id": "export-ui-check", "type": "text", "text": "透明动效 · 测试", "textStyle": "panel", "x": 160, "y": 650, "width": 900, "height": 180, "fontSize": 64, "zIndex": 1, "visible": true, "start": 0.5, "end": 1.5 }
+  ],
+  "partTransforms": {},
+  "partTextOverrides": {}
+}

@@ -1,0 +1,34 @@
+{
+  "name": "motion-preview-station",
+  "private": true,
+  "version": "2026.10.16",
+  "type": "module",
+  "scripts": {
+    "test": "node scripts/run-tests.mjs",
+    "dev": "vite",
+    "start:local": "vite --host 127.0.0.1 --port 5173 --strictPort",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "start": "node scripts/studio-launcher.mjs",
+    "setup": "node scripts/studio-launcher.mjs --install",
+    "doctor": "node scripts/studio-launcher.mjs --doctor"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "ffmpeg-static": "^5.3.0",
+    "playwright": "^1.63.0",
+    "react": "latest",
+    "react-dom": "latest",
+    "typescript": "latest",
+    "vite": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "latest",
+    "@types/react-dom": "latest"
+  },
+  "description": "Overlay Studio 本地动效工作台",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "packageManager": "pnpm@11.25.0"
+}

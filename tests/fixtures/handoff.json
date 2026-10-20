@@ -1,0 +1,10 @@
+{
+  "format": "overlay-studio-handoff",
+  "version": 1,
+  "video": { "name": "TEST-ONLY.mov", "duration": 40 },
+  "canvas": { "width": 1080, "height": 1440 },
+  "cues": [
+    { "id": "cue-1", "start": 1, "end": 4.5, "text": "为什么同样的视频，表达效果却不同？" },
+    { "id": "cue-2", "start": 6, "end": 9.5, "text": "这次测试，完成率提高了38%。" }
+  ]
+}

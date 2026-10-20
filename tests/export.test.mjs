@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+import { validateExport, validateExportImages } from '../scripts/export-server.mjs'
+const project=JSON.parse(readFileSync(new URL('./fixtures/export-project.json',import.meta.url),'utf8'))
+const request={fps:30,duration:4,project}
+assert.equal(validateExport(request),request)
+assert.equal(request.fileName,'动效图层.mov')
+assert.equal(validateExport({...request,fileName:'我的动效.mov'}).fileName,'我的动效.mov')
+assert.equal(validateExport({...request,fileName:'非法/名字'}).fileName,'非法-名字.mov')
+for(const patch of [{fps:0},{fps:29},{duration:-1},{duration:Infinity},{duration:3601},{sourceImage:{url:'https://example.com/image.png'}}]) assert.throws(()=>validateExport({...request,...patch}))
+assert.throws(()=>validateExport({...request,project:{...project,canvas:{...project.canvas,width:100}}}))
+assert.throws(()=>validateExport({...request,project:{...project,canvasLayers:[]}}))
+assert.throws(()=>validateExport({...request,project:{...project,canvasLayers:project.canvasLayers.map(l=>({...l,visible:false}))}}))
+assert.throws(()=>validateExport({...request,project:{...project,canvasLayers:project.canvasLayers.map(l=>({...l,width:NaN}))}}))
+assert.throws(()=>validateExport({...request,project:{...project,canvasLayers:project.canvasLayers.map(l=>({...l,end:0}))}}))
+console.log('PASS: export bounds, aspect validation, empty/hidden layers, image URL rejection, finite geometry, timing validation.')
+const imageLayer={...project.canvasLayers[0],type:'image',assetName:'人物图片.jpg',assetUrl:'/__studio/media/11111111-1111-4111-8111-111111111111'}
+const withImage=url=>({...request,project:{...project,canvasLayers:[{...imageLayer,assetUrl:url}]}})
+for(const kind of ['mov','mp4'])assert.doesNotThrow(()=>validateExport({...withImage(imageLayer.assetUrl),kind,mainMediaId:'11111111-1111-4111-8111-111111111111'}))
+assert.doesNotThrow(()=>validateExport(withImage('data:image/png;base64,aGVsbG8=')))
+for(const url of ['https://example.com/x.png','file:///etc/passwd','blob:invalid','/__studio/media/../../secret','/__studio/media/11111111-1111-4111-8111-111111111111?path=x'])assert.throws(()=>validateExport(withImage(url)))
+const meta=async()=>({type:'image',mime:'image/jpeg',file:'local-test-image'})
+const stats=async()=>({size:1024,isFile:()=>true})
+await validateExportImages(withImage(imageLayer.assetUrl),meta,stats)
+await assert.rejects(()=>validateExportImages(withImage(imageLayer.assetUrl),async()=>{throw Error('missing')},stats),/人物图片.jpg.*丢失/)
+await assert.rejects(()=>validateExportImages(withImage(imageLayer.assetUrl),meta,async()=>{throw Error('missing')}),/无法读取/)
+await assert.rejects(()=>validateExportImages(withImage(imageLayer.assetUrl),async()=>({type:'video',mime:'video/mp4',file:'x'}),stats),/不是支持/)
+await assert.rejects(()=>validateExportImages(withImage(imageLayer.assetUrl),meta,async()=>({size:33*1024**2,isFile:()=>true})),/超过 32MB/)
+await assert.rejects(()=>validateExportImages(withImage(imageLayer.assetUrl),meta,async()=>({size:0,isFile:()=>true})),/为空/)
+console.log('PASS: persisted local images accepted for MOV/MP4; unsafe URLs, missing, wrong-type, empty and oversized files rejected.')

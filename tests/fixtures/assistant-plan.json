@@ -1,0 +1,16 @@
+{
+  "format": "overlay-studio-plan",
+  "version": 1,
+  "cards": [
+    {
+      "start": 1, "end": 4.5, "sceneId": "question",
+      "content": { "title": "同样的视频，表达效果为何不同？", "items": [], "value": "", "note": "", "placement": "left" },
+      "cueIds": ["cue-1"], "reason": "测试编排：保留原文提问的比较对象。"
+    },
+    {
+      "start": 6, "end": 9.5, "sceneId": "metric",
+      "content": { "title": "本次测试：完成率提升", "items": [], "value": "38%", "note": "", "placement": "right" },
+      "cueIds": ["cue-2"], "reason": "测试编排：数值与测试范围对应原字幕，不补充其他结论。"
+    }
+  ]
+}
