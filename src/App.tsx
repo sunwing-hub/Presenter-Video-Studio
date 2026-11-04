@@ -1742,7 +1742,7 @@ export default function App() {
       {draft.opening&&<div className="draft-loading" role="status">正在恢复本地草稿，请稍候…</div>}
       <ExportPanel kind={exportKind} open={exportOpen} close={() => setExportOpen(false)} duration={totalDuration} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} makePayload={makeExportPayload} sourceMediaId={videoSource?.url.match(/^\/__studio\/media\/([a-f0-9-]{36})$/)?.[1]} />
       <header className="topbar">
-        <div className="brand"><span className="brand-mark"><i /><i /><i /></span><span>动效预览台</span><small>MOTION SYSTEM / V.01</small></div>
+        <div className="brand"><span className="brand-mark"><i /><i /><i /></span><span>Presenter Video Studio</span><small>MOTION SYSTEM / V.01</small></div>
         <div className="topbar-center"><span className="status-dot" /> PREVIEW READY</div>
         <div className="edit-history-actions"><button type="button" onClick={undoEdit} disabled={!editHistory.current.current || (sameEdit(editHistory.current.current, editSnapshot) && !editHistory.current.past.length)} title="撤回上一步（⌘Z）">↶ 撤回</button><button type="button" onClick={redoEdit} disabled={!editHistory.current.future.length || !editHistory.current.current || !sameEdit(editHistory.current.current, editSnapshot)} title="重做（⌘⇧Z）">↷ 重做</button></div>
         <button className="export-button" type="button" onClick={() => { setExportKind('mov');setPlaying(false); setExportOpen(true) }}><ExportIcon /> 导出透明 MOV</button>

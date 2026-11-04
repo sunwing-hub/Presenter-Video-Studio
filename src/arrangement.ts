@@ -1,5 +1,5 @@
 import {validateLayouts,type LayoutClip} from './layoutTimeline.ts'
-/** Serializable contract shared by the editor and the Overlay Studio skill. Times are seconds. */
+/** Serializable contract shared by the editor and the Presenter Video Studio skill. Times are seconds. */
 export type SubtitleCue = { id: string; start: number; end: number; text: string }
 export const scriptTemplates = [
   { id: 'orbitcards', label: '彩色卡片环绕展开' },

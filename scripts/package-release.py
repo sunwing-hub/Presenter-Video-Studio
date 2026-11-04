@@ -27,10 +27,10 @@ for p in sorted(set(paths)):
   if re.search(r'/(?:Users|home)/[A-Za-z0-9_.-]+/|gh[pousr]_[A-Za-z0-9]{30,}|sk-[A-Za-z0-9_-]{24,}|-----BEGIN (?:RSA |OPENSSH )?PRIVATE KEY-----',text):raise SystemExit('Review sensitive content: '+rel)
  files.append({'path':rel,'sha256':hashlib.sha256(data).hexdigest(),'bytes':len(data)})
 manifest=root/'文件清单.json';manifest.write_text(json.dumps({'version':version,'files':files},ensure_ascii=False,indent=2))
-archive=out/f'Overlay-Studio-{version}.zip';skill=out/f'overlay-studio-editor-skill-{version}.zip'
+archive=out/f'Presenter-Video-Studio-{version}.zip';skill=out/f'overlay-studio-editor-skill-{version}.zip'
 with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
- for f in files:z.write(root/f['path'],f'Overlay-Studio-{version}/'+f['path'])
- z.write(manifest,f'Overlay-Studio-{version}/文件清单.json')
+ for f in files:z.write(root/f['path'],f'Presenter-Video-Studio-{version}/'+f['path'])
+ z.write(manifest,f'Presenter-Video-Studio-{version}/文件清单.json')
 with zipfile.ZipFile(skill,'w',zipfile.ZIP_DEFLATED) as z:
  for p in sorted((root/'skills/overlay-studio-editor').rglob('*')):
   if p.is_file():z.write(p,p.relative_to(root/'skills').as_posix())

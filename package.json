@@ -1,5 +1,5 @@
 {
-  "name": "motion-preview-station",
+  "name": "presenter-video-studio",
   "private": true,
   "version": "2026.11.5-2",
   "type": "module",
@@ -26,7 +26,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest"
   },
-  "description": "Overlay Studio：本地剪辑工作台、知识讲解模板中心与 WorkBuddy/Codex Skill",
+  "description": "Presenter Video Studio：本地剪辑工作台、知识讲解模板中心与 WorkBuddy/Codex Skill",
   "engines": {
     "node": ">=22.18.0"
   },

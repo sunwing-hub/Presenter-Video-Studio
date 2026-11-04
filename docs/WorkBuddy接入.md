@@ -13,7 +13,7 @@ WorkBuddy 官方文档说明技能由 SKILL.md 与可选 scripts/references/asse
 2. 下载 `overlay-studio-editor-skill-2026.11.5.zip`。它是独立技能包，不把工作台程序塞进 Skill 上下文。
 3. 在 WorkBuddy 技能管理中选择本地包上传/导入；不同版本入口可能不同，以实际界面和官方说明为准。不改写客户端内部配置。
 4. 将工作台文件夹加入当前助手可访问工作空间；给出安装位置与实际端口。
-5. 使用“Overlay Studio 剪辑这个口播”的指令，并提供真实素材、发布规格和配乐路径。
+5. 使用“Presenter Video Studio 剪辑这个口播”的指令，并提供真实素材、发布规格和配乐路径。
 
 可先让助手执行 `node scripts/studio-cli.mjs env-check` 和 `node scripts/studio-cli.mjs list-templates --json`。助手读取选定模板的规范后，再安排分镜与原生工程。
 

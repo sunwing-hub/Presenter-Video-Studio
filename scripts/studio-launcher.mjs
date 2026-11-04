@@ -62,7 +62,7 @@ async function doctor(){
  await run(ffmpeg,['-version'],{stdio:'ignore'})
  const {chromium}=await import('playwright')
  const browser=await chromium.launch({headless:true})
- try{const page=await browser.newPage();await page.setContent('<p>Overlay Studio</p>');await page.screenshot()}finally{await browser.close()}
+ try{const page=await browser.newPage();await page.setContent('<p>Presenter Video Studio</p>');await page.screenshot()}finally{await browser.close()}
  console.log('编辑器、FFmpeg 和 Chromium：可用。')
  if(process.platform==='darwin'){
   try{await run('/usr/bin/xcrun',['--find','clang'],{stdio:'ignore'});console.log('透明 MOV 编译工具：可用。')}
