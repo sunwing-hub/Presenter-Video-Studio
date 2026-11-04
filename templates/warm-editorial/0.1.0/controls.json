@@ -1,0 +1,120 @@
+{
+  "template": "team.warm-editorial@0.1.0",
+  "canvas": "1080x1920",
+  "fps": 25,
+  "fields": {
+    "opening": [
+      "value",
+      "unit",
+      "label",
+      "question",
+      "detail"
+    ],
+    "contrast": [
+      "leftTitle",
+      "leftDetail",
+      "rightTitle",
+      "rightDetail",
+      "note"
+    ],
+    "focus": [
+      "title",
+      "detail",
+      "note"
+    ],
+    "metric-steps": [
+      "value",
+      "label",
+      "step1",
+      "step2",
+      "step3",
+      "stepDetail",
+      "annotation",
+      "source",
+      "note"
+    ],
+    "steps": [
+      "step1",
+      "step2",
+      "step3",
+      "stepDetail",
+      "note"
+    ],
+    "viewpoint": [
+      "title",
+      "detail"
+    ],
+    "metric": [
+      "value",
+      "label",
+      "cardTitle",
+      "cardDetail",
+      "caveatTitle",
+      "caveatDetail",
+      "annotation",
+      "source"
+    ],
+    "comparison": [
+      "sample",
+      "sampleDetail",
+      "leftValue",
+      "rightValue",
+      "leftLabel",
+      "rightLabel",
+      "annotation",
+      "source",
+      "note"
+    ],
+    "caution": [
+      "title",
+      "detail",
+      "secondTitle",
+      "secondDetail",
+      "annotation",
+      "source"
+    ],
+    "pair": [
+      "leftTitle",
+      "leftDetail",
+      "rightTitle",
+      "rightDetail",
+      "note"
+    ],
+    "closing": [
+      "title",
+      "detail"
+    ]
+  },
+  "opening": {
+    "value": "1–6位整数",
+    "unit": "≤3字",
+    "label": "≤18字",
+    "question": "≤14字",
+    "detail": "≤28字"
+  },
+  "timeline": "声音变速后重新对齐分镜与字幕，禁止照搬样片时间",
+  "audio": {
+    "source": "预混完整音轨，人物原片自动静音",
+    "BGMlibrary": "{BGM_LIBRARY}",
+    "sampleGain": 0.22,
+    "duckThreshold": 0.06,
+    "duckRatio": 2,
+    "note": "每首音乐源响度不同，试听并测量后调整；0.22不是固定最终响度"
+  },
+  "tempo": {
+    "policy": "按命令确认后调整",
+    "approvedSample": [
+      1.14,
+      1.16,
+      1.12,
+      1.14
+    ]
+  },
+  "motion": "数字错峰回弹；卡片接力；人物窗口移动完成后进入正文",
+  "limitations": [
+    "仅竖屏经过验证",
+    "本版不提供AI补景槽位",
+    "不自动核实新片数字",
+    "不自动复用旧语音、事实或时间线"
+  ]
+}

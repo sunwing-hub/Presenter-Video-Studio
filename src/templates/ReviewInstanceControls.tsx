@@ -1,0 +1,7 @@
+import type {ReviewBinding} from './reviewTimeline.mjs'
+import type {ReviewParams} from './reviewModel.mjs'
+import {reviewSignature} from './reviewTimeline.mjs'
+export function ReviewInstanceControls({binding,onChange,onOpen,onRetry}:{binding:ReviewBinding;onChange:(patch:Partial<ReviewParams>)=>void;onOpen:()=>void;onRetry:()=>void}){
+ const p=binding.project.params;let synced=false;try{synced=binding.signature===reviewSignature(binding.project)&&!!binding.audio}catch{}
+ return <div className="script-editor review-instance-controls"><h3>成果审阅 · 可编辑模板</h3><label>模板标题<input aria-label="模板标题" value={p.title} maxLength={28} onChange={e=>onChange({title:e.target.value})}/></label>{p.checks.map((v,i)=><label key={i}>模板审阅 {i+1}<input aria-label={`模板审阅 ${i+1}`} value={v} maxLength={24} onChange={e=>onChange({checks:p.checks.map((s,j)=>i===j?e.target.value:s)})}/></label>)}<label>模板结论<input aria-label="模板结论" value={p.conclusion} maxLength={28} onChange={e=>onChange({conclusion:e.target.value})}/></label>{(['review','stagger','conclude'] as const).map((k,i)=><label key={k}>{['审阅落点','审阅间隔','结论落点'][i]}（相对场景起点）<input aria-label={['审阅落点','审阅间隔','结论落点'][i]} type="number" min={0} step={.1} value={p[k]} onChange={e=>onChange({[k]:+e.target.value})}/></label>)}<p role="status">{synced?'模板声音已同步':'模板声音需更新；导出前会检查'}</p><button type="button" onClick={onOpen}>打开完整模板参数</button><button type="button" onClick={onRetry}>重试更新模板声音</button><p>整体移动时动作和声音跟随；改变长度调整结尾停留，不能截断审阅与结论。模板混音轨跟随场景，不单独拖动。绑定独立人声时，该片段替代主视频原声。</p></div>
+}

@@ -34,7 +34,7 @@ try{
    if(!['GET','HEAD'].includes(req.method)){res.writeHead(405);res.end();return}
    if(path===`/__studio/export/${id}/payload`){res.setHeader('Content-Type','application/json');res.end(JSON.stringify(job.payload));return}
    const media=path.match(/^\/__studio\/media\/([a-f0-9-]{36})$/)
-   if(media&&mediaIds.has(media[1])&&await mediaRoute(req,res,path))return
+   if(media&&mediaIds.has(media[1])&&await mediaRoute(req,res,path,{render:job.payload.kind==='mp4'}))return
    if(path.startsWith('/__studio/')){res.writeHead(404);res.end();return}
    const file=resolve(web,path==='/'?'index.html':'.'+decodeURIComponent(path))
    if(!file.startsWith(web+sep)){res.writeHead(403);res.end();return}

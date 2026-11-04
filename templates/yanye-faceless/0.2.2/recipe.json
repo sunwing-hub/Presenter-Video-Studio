@@ -1,0 +1,14 @@
+{
+  "story": "contradiction → barrier → model demonstrations → practice → resource",
+  "sourceOfTruth": "source audio + locked transcript + explicit retiming map",
+  "motion": "assembly, disassembly, sorting, branching, simplification, feedback, calendar filling",
+  "production": [
+    "voice retiming",
+    "phrase alignment",
+    "semantic diagram and beat binding",
+    "keyframe review",
+    "native MP4 export",
+    "visual and media QC"
+  ],
+  "delivery": "1080×1920 30fps, MP4, captions, covers, companion prompts"
+}

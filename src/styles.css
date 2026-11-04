@@ -1221,3 +1221,16 @@ html.export-mode,html.export-mode body,html.export-mode #root { background:trans
 .thumb--metric-number small{font-size:8px;letter-spacing:0}
 /* Audio controls are outside the composition, so they never enter an export. */
 .audio-library{margin:12px 0;padding:16px;background:#242437;border-radius:12px}.audio-library details{margin-top:10px;padding:10px;background:#1e1e2e;border-radius:8px}.audio-library summary{cursor:pointer;overflow-wrap:anywhere}.audio-library details label{display:inline-flex;align-items:center;gap:8px;margin:10px 16px 0 0}.audio-library input[type=number]{width:80px;background:#35354b;color:#fff;border:0;border-radius:5px;padding:6px}.audio-library audio{display:block;width:min(100%,360px);margin:12px 0}.audio-library small{display:block;color:#aaa}.track-music .studio-clip{background:#4c477c}
+
+/* Keep the template library visible beside the export actions. */
+.topbar { gap: 12px; }
+.topbar-center { position: static; transform: none; margin-left: auto; white-space: nowrap; }
+.template-library-entry { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; min-height: 36px; padding: 0 16px; border: 1px solid #818cf8; border-radius: 8px; background: #6366f1; color: #fff; font-size: 13px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.template-library-entry:hover { background: #4f46e5; }
+.template-library-entry:focus-visible { outline: 2px solid #c7d2fe; outline-offset: 3px; }
+@media (max-width: 1119px) {
+  .topbar { height: auto; min-height: 68px; flex-wrap: wrap; padding-block: 10px; }
+  .topbar .brand { margin-right: auto; }
+  .topbar .brand small { display: none; }
+  .template-library-entry { margin-left: auto; }
+}

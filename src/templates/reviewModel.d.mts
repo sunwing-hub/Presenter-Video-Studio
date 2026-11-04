@@ -1,0 +1,13 @@
+export type ReviewParams={title:string;checks:string[];conclusion:string;review:number;conclude:number;duration:number;volume:number;sound:boolean;accent:string;stagger:number;enterDuration:number;voiceVolume:number;musicVolume:number;musicLoop:boolean;musicFade:number;ducking:boolean;duckLevel:number;videoOffset:number;voiceOffset:number;musicOffset:number}
+export type ReviewMedia={id:string;name:string}
+export type ReviewProject={format:'overlay-review-project';version:1;template:string;params:ReviewParams;media:{video:ReviewMedia|null;voice:ReviewMedia|null;music:ReviewMedia|null}}
+export const reviewDefaults:ReviewParams
+export function validateReview(input:unknown):ReviewParams
+export function validateReviewProject(input:unknown):ReviewProject
+export function reviewEvents(p:ReviewParams):{id:string;label:string;at:number}[]
+export function progress(time:number,start:number,duration:number):number
+export function eased(time:number,start:number,duration:number):number
+export function cueSample(t:number,index:number):number
+export function cueDuration(index:number):number
+export const reviewSoundRevision:string
+export function wavStereo(samples:Float32Array,sampleRate?:number):Uint8Array

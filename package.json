@@ -1,7 +1,7 @@
 {
   "name": "motion-preview-station",
   "private": true,
-  "version": "2026.10.16",
+  "version": "2026.11.5",
   "type": "module",
   "scripts": {
     "test": "node scripts/run-tests.mjs",
@@ -26,7 +26,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest"
   },
-  "description": "Overlay Studio 本地动效工作台",
+  "description": "Overlay Studio：本地剪辑工作台、知识讲解模板中心与 WorkBuddy/Codex Skill",
   "engines": {
     "node": ">=22.18.0"
   },

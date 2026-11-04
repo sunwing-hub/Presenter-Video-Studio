@@ -1,0 +1,86 @@
+{
+  "schema": "overlay-studio/team-rules@1",
+  "source": "templates/README.md（人类可读源；本文件为机读固化，两处需同步修改）",
+  "updatedAt": "2026-10-30",
+  "hardRules": [
+    {
+      "id": "one-theme-per-film",
+      "rule": "同片单主题：深色科技风、白色流程风或暖纸数字口播各自保持开场/正文/转场/结尾一致，不按镜头、章节或论点交替深浅主题",
+      "source": "用户2026-10-26单主题偏好；2026-10-30认可暖纸样片并要求入库"
+    },
+    {
+      "id": "caption-single-line",
+      "rule": "字幕单行、按完整语义短语断句、无尾标点、关键词突出",
+      "source": "0.3.1-review qualityRules"
+    },
+    {
+      "id": "caption-not-verbatim",
+      "rule": "不把改写内容当逐字字幕；声音内容保留与字幕展示分别控制（例如原声全保留 ≠ 全部上字幕；强表述可不显示为字幕）",
+      "source": "README + 制作规则"
+    },
+    {
+      "id": "bgm-source",
+      "rule": "BGM 来自用户指定曲库目录，保留来源哈希；不宣称已有商用音乐授权",
+      "source": "README + 0.3.1 qualityRules"
+    },
+    {
+      "id": "ai-reuse-no-repurchase",
+      "rule": "已验收 AI 素材入库复用；禁止自动付费重试；付费内容必须有用户有效预算授权，超时先查询状态不得直接重提",
+      "source": "README + 接入方案"
+    },
+    {
+      "id": "no-invented-logo",
+      "rule": "不凭空生成产品 Logo；官方标识使用本地核验素材",
+      "source": "README"
+    },
+    {
+      "id": "no-invented-evidence",
+      "rule": "代码生成图解与业务演示，不虚构真实证据；真实产品界面、机构事实、品牌与金额须来自可核验资料，数据保存单位、时间、范围、来源和公式",
+      "source": "scene-narration 规范"
+    },
+    {
+      "id": "reviewed-means-watched",
+      "rule": "待审核素材不能伪标为干净；程序检查通过不等于用户验收通过",
+      "source": "制作规则"
+    }
+  ],
+  "scopePolicy": {
+    "rule": "跨任务长期偏好与单片要求分开。用户新指令只覆盖本次任务，不把单片要求（如“某片删去强表述字幕”）自动套用到所有视频",
+    "source": "接入方案 §7"
+  },
+  "visualThemes": {
+    "dark-tech": {
+      "background": "深蓝底色",
+      "accent": "青绿/蓝色强调",
+      "fit": "科技观点、趋势和 AI 能力讲解"
+    },
+    "white-flow": {
+      "background": "白色底色",
+      "accent": "深色文字，蓝绿强调",
+      "fit": "流程、教程与业务案例"
+    },
+    "warm-paper": {
+      "background": "暖色纸底",
+      "accent": "深绿正文与卡片，砖红数字",
+      "fit": "数据开场、新闻解读、趋势观点与研究讲解",
+      "template": "team.warm-editorial@0.1.0"
+    }
+  },
+  "firstBatch": [
+    {
+      "id": "team.scene-narration",
+      "version": "0.2.1-native",
+      "theme": "dark-tech"
+    },
+    {
+      "id": "team.yanye-faceless",
+      "version": "0.2.2",
+      "theme": "white-flow"
+    },
+    {
+      "id": "team.warm-editorial",
+      "version": "0.1.0",
+      "theme": "warm-paper"
+    }
+  ]
+}

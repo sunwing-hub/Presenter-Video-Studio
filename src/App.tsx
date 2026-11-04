@@ -1,3 +1,12 @@
+import {CompanyOfficeScene,type CompanyOfficeData} from './productions/CompanyOfficeScene'
+import {sourceAudioGain} from '../scripts/source-audio.mjs'
+import {StoryScene} from './templates/story/StoryScene'
+import {validateStory,type StoryProject} from './templates/story/storyModel.mjs'
+import {ReviewTimeline} from './templates/ReviewTimelineScene'
+import {ReviewInstanceControls} from './templates/ReviewInstanceControls'
+import {reviewDefaults,validateReviewProject,type ReviewParams} from './templates/reviewModel.mjs'
+import {reviewSignature,resizeReviewBinding,validateReviewBinding,reviewAudioClip,type ReviewBinding} from './templates/reviewTimeline.mjs'
+import './templateLab.css'
 import { useEffect, useMemo, useRef, useState, type ChangeEvent, type CSSProperties, type DragEvent as ReactDragEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 import { draftCards, parseSrt, validatePlan, validateCues, scriptTemplates, isLayerActive, timeLabel, type SubtitleCue, type PlanCard, type ScriptContent, type ScriptTemplate } from './arrangement'
 import { ScriptCard } from './ScriptCard'
@@ -21,7 +30,7 @@ const RENDER_JOB = new URLSearchParams(location.search).get('renderJob')
 if (RENDER_JOB) document.documentElement.classList.add('export-mode')
 
 type InfoCardKind = 'charts' | 'timeline' | 'list' | 'tags' | 'progress' | 'person' | 'insert' | 'question' | 'vote' | 'divider' | 'outro' | 'watermark' | 'arrow' | 'calendar' | 'halo' | 'orbit' | 'triad' | 'board' | 'loop' | 'review' | 'bottomquote' | 'source' | 'transition' | 'agenda' | 'skillorbit' | 'mediawall' | 'pipeline' | 'appcluster' | 'splitboard' | 'documentgrid' | 'flowline' | 'floatingframes' | 'dualmetric' | 'archflow'
-type SceneId = 'metric' | 'compare' | 'quote' | 'rail' | InfoCardKind | ScriptTemplate
+type SceneId = 'team-story' | 'team-review' | 'metric' | 'compare' | 'quote' | 'rail' | InfoCardKind | ScriptTemplate
 
 type MetricSettings = {
   value: number
@@ -54,6 +63,7 @@ type RailSettings = {
 }
 
 type CanvasLayer = {
+  companyScene?: CompanyOfficeData
   id: string
   type: 'card' | 'text' | 'image'
   sceneId?: SceneId
@@ -77,6 +87,8 @@ type CanvasLayer = {
   visible: boolean
   start?: number
   end?: number
+  story?: StoryProject
+  review?: ReviewBinding
   script?: ScriptContent
   cueIds?: string[]
   reason?: string
@@ -183,6 +195,8 @@ const partLabelFromElement = (element: HTMLElement) => {
 }
 
 const baseScenes: Array<{ id: SceneId; number: string; name: string; description: string }> = [
+  {id:'team-story',number:'72',name:'专业延展 · 全片模板',description:'从首帧到结尾的语义编排 · 横竖独立布局'},
+  {id:'team-review',number:'71',name:'深色成果审阅',description:'原生可编辑模板 · 动作与声音联动'},
   { id: 'orbitcards', number: '70', name: '彩色卡片环绕展开', description: '六卡叠放 · 环绕展开 · 可编辑文字' },
   { id: 'metric', number: '01', name: 'Metric Focus', description: '核心数字动效' },
   { id: 'compare', number: '02', name: 'Compare Split', description: '左右对比卡' },
@@ -673,13 +687,15 @@ export default function App() {
   const setCompare = (value: CompareSettings) => setCardSetting('compare', value)
   const setQuote = (value: QuoteSettings) => setCardSetting('quote', value)
   const setRail = (value: RailSettings) => setCardSetting('rail', value)
-  const totalDuration = videoDuration || Math.max(duration, ...cues.map(c => c.end), ...canvasLayers.map(l => l.end ?? 0))
+  const totalDuration = videoDuration || (canvasLayers.some(l=>l.review)?Math.max(.1,...cues.map(c=>c.end),...canvasLayers.map(l=>l.end??0),...audioClips.map(c=>c.end)):Math.max(duration, ...cues.map(c => c.end), ...canvasLayers.map(l => l.end ?? 0)))
+  const previewSourceGain=sourceAudioGain({canvasLayers,audioClips,videoMuted,videoVolume},totalDuration)
   const seek = (seconds: number) => {
     const next = Math.max(0, Math.min(totalDuration, seconds))
     clockRef.current = next
     setCurrentTime(next)
     if (previewVideoRef.current && videoDuration) previewVideoRef.current.currentTime = next
   }
+  const reviewVoiceActive=canvasLayers.some(l=>l.visible&&l.review?.project.media.voice&&currentTime>=(l.start??0)&&currentTime<(l.end??0))
   useEffect(() => {
     if (RENDER_JOB) return
     if (!playing) return
@@ -747,9 +763,9 @@ export default function App() {
   useEffect(() => {
     const video = previewVideoRef.current
     if (!video || !videoSource) return
-    video.muted = videoMuted || Boolean(RENDER_JOB)
-    video.volume = videoVolume / 100
-  }, [videoSource, videoMuted, videoVolume])
+    video.muted = previewSourceGain===0 || reviewVoiceActive || Boolean(RENDER_JOB)
+    video.volume = previewSourceGain
+  }, [videoSource, previewSourceGain,reviewVoiceActive])
   useEffect(()=>{
     const video=previewVideoRef.current;if(!video||!videoSource||RENDER_JOB)return
     let cancelled=false
@@ -974,6 +990,7 @@ export default function App() {
     setSelectedPart(null)
   }
   const changeAspect = (next: typeof canvasAspect) => {
+    if(next!=='16 / 9'&&canvasLayers.some(l=>l.review)){setArrangeMessage('成果审阅当前支持横屏 16:9，请先移除该模板再切换画幅。');return}
     const [a, b] = next.split(' / ').map(Number)
     const width = a >= b ? Math.round(1080 * a / b) : 1080
     const height = a >= b ? 1080 : Math.round(1080 * b / a)
@@ -983,12 +1000,35 @@ export default function App() {
     editorGestureRef.current = null
     setCanvasAspect(next)
   }
-  const updateLayer = (id: string, updates: Partial<CanvasLayer>) => setCanvasLayers((layers) => layers.map((layer) => layer.id === id ? { ...layer, ...updates } : layer))
+  const updateLayer = (id: string, updates: Partial<CanvasLayer>) => {
+    const storyLayer=canvasLayers.find(l=>l.id===id);if(storyLayer?.story&&(updates.start!==undefined||updates.end!==undefined)){if((updates.start??storyLayer.start)!==0||Math.abs((updates.end??storyLayer.end??0)-storyLayer.story.duration)>.01){setArrangeMessage('全片模板与口播、字幕共同绑定；请在全片编辑器调整内容，不单独移动整条编排。');return false}}
+    const layer=canvasLayers.find(l=>l.id===id)
+    if(layer?.review&&(updates.start!==undefined||updates.end!==undefined)){
+      try{const start=updates.start??layer.start??0,end=updates.end??layer.end??start+layer.review.project.params.duration
+        if(videoDuration&&end>videoDuration+.01)throw Error('模板超出人物视频时长')
+        if(canvasLayers.some(l=>l.id!==id&&l.review&&(l.start??0)<end&&(l.end??0)>start))throw Error('完整模板场景暂不支持重叠，请调整片段位置')
+        updates={...updates,review:resizeReviewBinding(updates.review??layer.review,start,end)}
+      }catch(e){setArrangeMessage((e as Error).message);return false}
+    }
+    setCanvasLayers(layers=>layers.map(l=>l.id===id?{...l,...updates}:l));return true
+  }
+  const insertReview = (binding:ReviewBinding) => {
+    if(canvasAspect!=='16 / 9'){setArrangeMessage('请先把画幅切换为横屏 16:9，再添加成果审阅模板。');return false}
+    const start=currentTime,end=start+binding.project.params.duration
+    if(videoDuration&&end>videoDuration+.01){setArrangeMessage('当前位置剩余时长不足，请移动播放头或缩短模板。');return false}
+    if(canvasLayers.some(l=>l.review&&(l.start??0)<end&&(l.end??0)>start)){setArrangeMessage('完整模板场景暂不支持重叠，请把播放头移到已有模板之后。');return false}
+    const layer:CanvasLayer={id:createLayerId(),type:'card',sceneId:'team-review',review:binding,x:0,y:0,width:CANVAS_WIDTH,height:CANVAS_HEIGHT,fontSize:48,zIndex:Math.max(0,...canvasLayers.map(l=>l.zIndex))+1,visible:true,start,end}
+    setCanvasLayers(layers=>[...layers,layer]);setSelectedLayerId(layer.id);setSelectedPart(null);setActiveScene('team-review');setEditorMode(true);setPlaying(false);setArrangeMessage('成果审阅模板已加入时间轴，正在准备关联声音。');return true
+  }
+  const changeReviewParams=(layer:CanvasLayer,patch:Partial<ReviewParams>)=>{if(!layer.review)return;updateLayer(layer.id,{review:{...layer.review,project:{...layer.review.project,params:{...layer.review.project.params,...patch}}}})}
+
   const rememberCardLayout = (layer: CanvasLayer) => {
     if (layer.type !== 'card' || !layer.sceneId) return
     setCardLayoutPresets(presets => ({ ...presets, [layer.sceneId!]: { x: layer.x, y: layer.y, width: layer.width, height: layer.height, fontSize: layer.fontSize } }))
   }
   const addCardLayer = (sceneId: SceneId, position?: { x: number; y: number }) => {
+    if(sceneId==='team-story'){setArrangeMessage('请打开已制作的全片模板工程；完整口播与事件时码绑定后使用。');return}
+    if(sceneId==='team-review'){insertReview({project:{format:'overlay-review-project',version:1,template:'team.artifact-review@0.2.0',params:{...reviewDefaults},media:{video:null,voice:null,music:null}}});return}
     setEditorMode(true)
     const zIndex = Math.max(0, ...canvasLayers.map((layer) => layer.zIndex)) + 1
     const preset = cardLayoutPresets[sceneId]
@@ -1379,25 +1419,27 @@ export default function App() {
     if (selectedLayer?.script) updateLayer(selectedLayer.id, { script: { ...selectedLayer.script, ...updates } })
   }
   const projectSnapshot = () => ({
-    version: 7, cues, subtitleName, currentTime, presenter, layouts:layoutClips, audioClips, captionStyle, arrangementId,
+    version: 7, cues, subtitleName, currentTime, presenter, layouts:layoutClips, audioClips, captionStyle, arrangementId, videoMuted, videoVolume,
     canvas: { width: CANVAS_WIDTH, height: CANVAS_HEIGHT, aspectRatio: canvasAspect.replaceAll(' ', '') },
     duration, canvasLayers, partTransforms, partTextOverrides, materials, cardLayoutPresets,
     metric: metricPreset, compare: comparePreset, quote: quotePreset, rail: railPreset,
   })
   const makeExportPayload = async () => {
     setPlaying(false)
-    const project = projectSnapshot()
+    const project = {...projectSnapshot(),audioClips:[...audioClips,...reviewClips]}
+    for(const layer of canvasLayers.filter(l=>l.visible&&l.review)){validateReviewBinding(layer.review);if(!reviewAudioClip(layer))throw Error('模板声音尚未同步，请等待或重试更新声音')}
     if (canvasLayers.some(layer => layer.visible && layer.sceneId === 'source') && !sourceImage) throw Error('请先重新导入引用截图，避免导出占位内容。')
     if (canvasLayers.some(layer => layer.visible && layer.sceneId === 'insert') && !insertImage) throw Error('请先重新导入插图，避免导出占位内容。')
     if (exportKind==='mov'&&!canvasLayers.some(layer => layer.visible)) throw Error('请先添加可见的动效或文字。')
     let mainMediaId:string|undefined
     if(exportKind==='mp4'){
-      if(!videoSource)throw Error('请先导入人物视频')
-      validateLayouts(layoutClips,videoDuration)
-      if(!layoutClips.length&&presenter.mode!=='full')throw Error('请添加布局时间段并选择内容素材')
+      if(!videoSource&&!canvasLayers.some(l=>l.review))throw Error('请先导入人物视频或添加成果审阅模板')
+      if(!videoSource){project.presenter={...presenterDefault};project.layouts=[]}
+      validateLayouts(layoutClips,videoDuration||totalDuration)
+      if(videoSource&&!layoutClips.length&&presenter.mode!=='full')throw Error('请添加布局时间段并选择内容素材')
       // Persisted main footage is already on disk; don't upload it again for each export.
-      mainMediaId=/^\/__studio\/media\/([a-f0-9-]{36})$/.exec(videoSource.url)?.[1]
-      if(!mainMediaId){const blob=await (await fetch(videoSource.url)).blob();mainMediaId=(await uploadLocalMedia(blob,videoSource.name)).id}
+      mainMediaId=videoSource?/^\/__studio\/media\/([a-f0-9-]{36})$/.exec(videoSource.url)?.[1]:undefined
+      if(videoSource&&!mainMediaId){const blob=await (await fetch(videoSource.url)).blob();mainMediaId=(await uploadLocalMedia(blob,videoSource.name)).id}
     }
     const embed = async (image: { url: string; name: string } | null) => {
       if (!image) return null
@@ -1413,7 +1455,7 @@ export default function App() {
     void fetch(`/__studio/export/${RENDER_JOB}/payload`).then(r => r.json()).then(async payload => {
       const p = payload.project
       setPresenter(p.presenter??presenterDefault);setLayoutClips(p.layouts??[])
-      if(payload.kind==='mp4'){setRenderFull(true);setPresenter(p.presenter??presenterDefault);setLayoutClips(p.layouts??[]);setCues(p.cues??[]);setCaptionStyle(validateCaption(p.captionStyle));setVideoSource({url:`/__studio/media/${payload.mainMediaId}`,name:'人物视频'})}
+      if(payload.kind==='mp4'){setRenderFull(true);setPresenter(p.presenter??presenterDefault);setLayoutClips(p.layouts??[]);setCues(p.cues??[]);setCaptionStyle(validateCaption(p.captionStyle));setVideoSource(payload.mainMediaId?{url:`/__studio/media/${payload.mainMediaId}`,name:'人物视频'}:null)}
       const aspect = CANVAS_ASPECTS.find(a => a.id.replaceAll(' ', '') === p.canvas.aspectRatio)
       if (!aspect) throw Error('Unknown aspect')
       setCanvasAspect(aspect.id); setCanvasLayers(p.canvasLayers); setPartTransforms(p.partTransforms || {}); setPartTextOverrides(p.partTextOverrides || {})
@@ -1426,7 +1468,7 @@ export default function App() {
       w.__overlayRenderAt = async time => {
         flushSync(()=>setCurrentTime(time))
         {
-          await Promise.all(Array.from(document.querySelectorAll('video')).map(async video=>{
+          await Promise.all(Array.from(document.querySelectorAll('video')).filter(v=>!v.dataset.renderIgnore).map(async video=>{
             if(video.readyState<1)await new Promise<void>((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('视频载入超时')),15000);video.addEventListener('loadedmetadata',()=>{clearTimeout(timer);resolve()},{once:true});video.addEventListener('error',()=>{clearTimeout(timer);reject(Error('视频无法解码，请使用 H.264 MP4'))},{once:true})})
             const at=Math.min(Number(video.dataset.renderTime??time),Math.max(0,video.duration-.04))
             if(Math.abs(video.currentTime-at)>.001||video.readyState<2)await new Promise<void>((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('视频定位超时')),15000);video.addEventListener('seeked',()=>{clearTimeout(timer);resolve()},{once:true});video.currentTime=at})
@@ -1441,7 +1483,7 @@ export default function App() {
   }, [])
   const exportProject = () => {
     const project = {
-      version: 7, presenter, layouts:layoutClips, audioClips, captionStyle,
+      version: 7, presenter, layouts:layoutClips, audioClips, captionStyle, videoMuted, videoVolume,
       cues, subtitleName, currentTime,
       canvas: { width: CANVAS_WIDTH, height: CANVAS_HEIGHT, aspectRatio: canvasAspect.replaceAll(' ', '') },
       exportedAt: new Date().toISOString(),
@@ -1467,6 +1509,8 @@ export default function App() {
   }
   const restoreProject = (project:Record<string,unknown>,exact=false) => {
         if (!Array.isArray(project.canvasLayers)) throw new Error('缺少工程图层。')
+        for(const layer of project.canvasLayers as CanvasLayer[])if(layer.story)layer.story=validateStory(layer.story)
+        for(const layer of project.canvasLayers as CanvasLayer[])if(layer.review){layer.review=validateReviewBinding(layer.review);if(Math.abs((layer.end??0)-(layer.start??0)-layer.review.project.params.duration)>.01)throw Error('模板时间与内部时长不一致')}
         const restoredCues = exact&&Array.isArray(project.cues)?project.cues as SubtitleCue[]:validateCues(project.cues ?? [])
         const restoredLayouts=validateLayouts(project.layouts??[])
         const restoredAudio=validateAudio(project.audioClips??[])
@@ -1539,6 +1583,27 @@ export default function App() {
   // Playback ticks are excluded: saving an edit captures its playhead without writing every frame.
   const draftSnapshot=useMemo(()=>({...projectSnapshot(),activeScene,videoDuration,showOverlayLayers,showLayoutGuides,editorMode,videoMuted,videoVolume,draftMedia:{video:videoSource,source:sourceImage,insert:insertImage}}),[cues,subtitleName,presenter,layoutClips,audioClips,captionStyle,canvasAspect,duration,canvasLayers,partTransforms,partTextOverrides,materials,cardLayoutPresets,metricPreset,comparePreset,quotePreset,railPreset,activeScene,videoSource,sourceImage,insertImage,videoDuration,showOverlayLayers,showLayoutGuides,editorMode,videoMuted,videoVolume,arrangementId])
   const draft=useDrafts(draftSnapshot,p=>restoreProject(p,true),Boolean(RENDER_JOB))
+  const [reviewRetry,setReviewRetry]=useState(0)
+  const reviewRequests=useRef(new Set<string>())
+  const reviewClips=useMemo(()=>canvasLayers.map(reviewAudioClip).filter((v):v is AudioClip=>!!v),[canvasLayers])
+  const reviewBindingKey=JSON.stringify(canvasLayers.filter(l=>l.review).map(l=>[l.id,l.review!.project,l.review!.signature]))
+  useEffect(()=>{if(RENDER_JOB||!draft.ready||draft.opening)return
+    const timer=setTimeout(()=>{for(const layer of canvasLayers){if(!layer.review)continue;let signature:string;try{signature=reviewSignature(layer.review.project)}catch(e){setArrangeMessage((e as Error).message);continue}
+      if(layer.review.audio&&layer.review.signature===signature)continue
+      const key=layer.id+signature;if(reviewRequests.current.has(key))continue;reviewRequests.current.add(key)
+      void fetch('/__studio/review/bind',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({project:layer.review.project})}).then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.error);const binding=validateReviewBinding(d);setCanvasLayers(layers=>layers.map(l=>{if(l.id!==layer.id||!l.review)return l;try{return reviewSignature(l.review.project)===signature?{...l,review:binding}:l}catch{return l}}))}).catch(e=>setArrangeMessage('模板声音未更新：'+e.message)).finally(()=>reviewRequests.current.delete(key))
+    }},500);return()=>clearTimeout(timer)
+  },[reviewBindingKey,reviewRetry,draft.ready,draft.opening])
+  useEffect(()=>{if(RENDER_JOB||!draft.ready||draft.opening)return;const raw=sessionStorage.getItem('overlay-review-pending');if(!raw)return
+    try{const data=JSON.parse(raw),binding=validateReviewBinding(data.binding)
+      if(canvasAspect!=='16 / 9'){if(!canvasLayers.length&&!videoSource){setCanvasAspect('16 / 9');return}setArrangeMessage('有待加入的成果审阅模板，请先切换到横屏 16:9。');return}
+      if(data.layerId){const target=canvasLayers.find(l=>l.id===data.layerId);if(!target?.review)throw Error('原模板实例已不存在，未修改当前工程');const end=(target.start??0)+binding.project.params.duration;if(videoDuration&&end>videoDuration+.01)throw Error('修改后的模板超出视频长度');if(!updateLayer(target.id,{review:binding,end}))return;setSelectedLayerId(target.id);setActiveScene('team-review');setArrangeMessage('模板实例已更新，保留原起点与画布位置。')}
+      else if(!insertReview(binding))return
+      sessionStorage.removeItem('overlay-review-pending');sessionStorage.removeItem('overlay-review-edit-context')
+    }catch(e){setArrangeMessage((e as Error).message);sessionStorage.removeItem('overlay-review-pending')}
+  },[draft.ready,draft.opening,canvasAspect,currentTime,videoDuration,reviewBindingKey])
+  const openReviewEditor=async(layer:CanvasLayer)=>{if(!layer.review)return;try{await draft.save();sessionStorage.setItem('overlay-review-edit-context',JSON.stringify({layerId:layer.id,project:layer.review.project}));location.assign('/?templateLab&editLayer='+encodeURIComponent(layer.id))}catch(e){setArrangeMessage('工程保存失败，暂未离开当前页面：'+(e as Error).message)}}
+
   const editSnapshot = useMemo<EditSnapshot>(() => ({
     canvasLayers, partTransforms, partTextOverrides, cues, captionStyle, materials, presenter, layoutClips, audioClips,
     canvasAspect, metricPreset, comparePreset, quotePreset, railPreset, cardLayoutPresets, videoSource, videoDuration, sourceImage, insertImage,
@@ -1620,11 +1685,12 @@ export default function App() {
   const trackSeek=(t:number)=>{setPlaying(false);seek(t)}
   const trackItems:TrackItem[]=useMemo(()=>[
     ...(videoSource?[{id:'person',name:videoSource.name,track:'person' as const,start:0,end:videoDuration||totalDuration,select:()=>trackSeek(0)}]:[]),
-    ...canvasLayers.map(layer=>({id:layer.id,name:layer.assetName||layer.script?.title||layer.text||scenes.find(s=>s.id===layer.sceneId)?.description||'动效',track:layer.type==='image'?'material' as const:'effect' as const,start:layer.start??0,end:layer.end??totalDuration,select:()=>{setPlaying(false);selectLayer(layer)},change:(start:number,end:number)=>updateLayer(layer.id,{start,end}),remove:()=>removeLayer(layer.id)})),
+    ...canvasLayers.map(layer=>({id:layer.id,name:layer.review?.project.params.title||layer.assetName||layer.script?.title||layer.text||scenes.find(s=>s.id===layer.sceneId)?.description||'动效',track:layer.type==='image'?'material' as const:'effect' as const,start:layer.start??0,end:layer.end??totalDuration,select:()=>{setPlaying(false);selectLayer(layer)},change:(start:number,end:number)=>updateLayer(layer.id,{start,end}),remove:()=>removeLayer(layer.id)})),
     ...layoutClips.filter(c=>c.mediaId).map(c=>({id:'layout:'+c.id,name:c.mediaName||'布局素材',track:'material' as const,start:c.start,end:c.end,select:()=>trackSeek(c.start),change:(start:number,end:number)=>{try{setLayoutClips(validateLayouts(layoutClips.map(l=>l.id===c.id?{...l,start,end}:l),totalDuration));setMediaError('')}catch(e){setMediaError((e as Error).message)}},remove:()=>setLayoutClips(layoutClips.map(l=>l.id===c.id?{...l,mediaId:undefined,mediaName:undefined,mediaType:undefined}:l))})),
     ...cues.map(c=>({id:'subtitle:'+c.id,name:c.text,track:'subtitle' as const,start:c.start,end:c.end,select:()=>trackSeek(c.start),change:(start:number,end:number)=>setCues(cues.map(q=>q.id===c.id?{...q,start,end}:q).sort((a,b)=>a.start-b.start)),remove:()=>{setCues(cues.filter(q=>q.id!==c.id));setCanvasLayers(layers=>layers.map(l=>({...l,cueIds:l.cueIds?.filter(id=>id!==c.id)})))}})),
+    ...reviewClips.map(clip=>({id:clip.id,name:clip.name,track:clip.track,start:clip.start,end:clip.end,select:()=>{const layer=canvasLayers.find(l=>'template-mix:'+l.id===clip.id);if(layer){setPlaying(false);selectLayer(layer)}}})),
     ...audioClips.map(clip=>({id:'audio:'+clip.id,name:clip.name,track:clip.track,start:clip.start,end:clip.end,volume:clip.volume,select:()=>trackSeek(clip.start),change:(start:number,end:number)=>setAudioClips(clips=>clips.map(item=>item.id===clip.id?{...item,start,end}:item)),changeVolume:(volume:number)=>setAudioClips(clips=>clips.map(item=>item.id===clip.id?{...item,volume}:item)),remove:()=>setAudioClips(clips=>clips.filter(item=>item.id!==clip.id))})),
-  ],[videoSource,videoDuration,totalDuration,canvasLayers,layoutClips,cues,audioClips,selectedLayerId,selectedPart])
+  ],[videoSource,videoDuration,totalDuration,canvasLayers,layoutClips,cues,audioClips,reviewClips,selectedLayerId,selectedPart])
   const activeLayoutClip=layoutAt(layoutClips,currentTime)
   const currentPresenter=activeLayoutClip?.settings??presenter
   const updatePresenter=(patch:Partial<PresenterSettings>)=>{if(activeLayoutClip)setLayoutClips(clips=>clips.map(c=>c.id===activeLayoutClip.id?{...c,settings:{...c.settings,...patch}}:c));else setPresenter(p=>({...p,...patch}))}
@@ -1646,19 +1712,19 @@ export default function App() {
             ? { ...layerBase, x: 0, y: 0, width: CANVAS_WIDTH, height: CANVAS_HEIGHT * .78 }
             : layerBase
       : layerBase
-              const motion=layer.type==='image'||layer.type==='text'&&layer.presentation?mediaMotion(currentTime,layer.start??0,layer.end??totalDuration,layer.presentation??{}):layer.type==='card'?mediaMotion(currentTime,layer.start??0,layer.end??totalDuration,{motion:'scale',motionDuration:['fan','docrelay'].includes(layer.sceneId??'')?.01:.45}):layer.textStyle==='emphasis'?mediaMotion(currentTime,layer.start??0,layer.end??totalDuration,{motion:'scale',motionDuration:.22}):{opacity:1,transform:'none'}
+              const motion=layer.story?{opacity:1,transform:'none'}:layer.type==='image'||layer.type==='text'&&layer.presentation?mediaMotion(currentTime,layer.start??0,layer.end??totalDuration,layer.presentation??{}):layer.type==='card'?mediaMotion(currentTime,layer.start??0,layer.end??totalDuration,{motion:'scale',motionDuration:['fan','docrelay'].includes(layer.sceneId??'')?.01:.45}):layer.textStyle==='emphasis'?mediaMotion(currentTime,layer.start??0,layer.end??totalDuration,{motion:'scale',motionDuration:.22}):{opacity:1,transform:'none'}
               const splitCardScale = source.type === 'card' && (currentPresenter.mode === 'right' || currentPresenter.mode === 'left') ? .72 : layer.width / CANVAS_WIDTH
               return layer.visible && <div data-layer-id={layer.id} className={`canvas-layer canvas-layer--${layer.type} ${selectedLayerId === layer.id ? 'is-selected' : ''}`} key={layer.id} style={{ left: `${layer.x / CANVAS_X_UNIT}%`, top: `${layer.y / CANVAS_Y_UNIT}%`, width: `${layer.width / CANVAS_X_UNIT}%`, height: `${layer.height / CANVAS_Y_UNIT}%`, zIndex: layer.zIndex, visibility: showOverlayLayers && isLayerActive(currentTime, layer.start, layer.end) ? 'visible' : 'hidden', '--layer-font-size': `${layer.fontSize / CANVAS_X_UNIT}cqw`, fontFamily: layer.fontFamily, opacity:motion.opacity, transform:motion.transform } as CSSProperties} onPointerDown={(event) => beginCanvasGesture(event, layer, 'move')} onPointerMove={updateCanvasGesture} onPointerUp={endCanvasGesture} onPointerCancel={endCanvasGesture}>
-                <div className="canvas-layer-content">{layer.type === 'card' && layer.sceneId ? <div className="canvas-card-stage" style={{ width: `${100 / splitCardScale}%`, height: `${CANVAS_HEIGHT / layer.height * 100 / splitCardScale}%`, transform: `scale(${splitCardScale})` }}>{renderScene(layer.sceneId, layer.id)}</div> : layer.type === 'image' ? <MediaCard presentation={layer.presentation}>{layer.mediaType==='video'?<MaterialVideo src={layer.assetUrl!} time={currentTime} start={layer.start??0} end={layer.end??totalDuration} offset={layer.sourceOffset??0} playing={playing} rendering={Boolean(RENDER_JOB)}/>:<img className="material-canvas-image" src={layer.assetUrl} alt={layer.assetName ?? '素材'} />}</MediaCard> : layer.textStyle==='kinetic'&&layer.keywordEffect ? <KeywordMotion effect={layer.keywordEffect} text={layer.text??''} time={Math.max(0,currentTime-(layer.start??0))} duration={(layer.end??totalDuration)-(layer.start??0)} color={layer.textColor}/> : <div className={`editable-text editable-text--${layer.textStyle ?? 'panel'}`} style={{color:layer.textColor || '#ffffff'}}>{layer.text}</div>}</div>
+                <div className="canvas-layer-content">{layer.companyScene ? <CompanyOfficeScene data={layer.companyScene} time={Math.max(0,currentTime-(layer.start??0))} duration={(layer.end??totalDuration)-(layer.start??0)}/> : layer.story ? <StoryScene project={layer.story} time={Math.max(0,currentTime-(layer.start??0))} portrait={CANVAS_HEIGHT>CANVAS_WIDTH} playing={playing} rendering={Boolean(RENDER_JOB)}/> : layer.review ? <ReviewTimeline binding={layer.review} time={currentTime} start={layer.start??0} end={layer.end??totalDuration} playing={playing} rendering={Boolean(RENDER_JOB)}/> : layer.type === 'card' && layer.sceneId ? <div className="canvas-card-stage" style={{ width: `${100 / splitCardScale}%`, height: `${CANVAS_HEIGHT / layer.height * 100 / splitCardScale}%`, transform: `scale(${splitCardScale})` }}>{renderScene(layer.sceneId, layer.id)}</div> : layer.type === 'image' ? <MediaCard presentation={layer.presentation}>{layer.mediaType==='video'?<MaterialVideo src={layer.assetUrl!} time={currentTime} start={layer.start??0} end={layer.end??totalDuration} offset={layer.sourceOffset??0} playing={playing} rendering={Boolean(RENDER_JOB)}/>:<img className="material-canvas-image" src={layer.assetUrl} alt={layer.assetName ?? '素材'} />}</MediaCard> : layer.textStyle==='kinetic'&&layer.keywordEffect ? <KeywordMotion effect={layer.keywordEffect} text={layer.text??''} time={Math.max(0,currentTime-(layer.start??0))} duration={(layer.end??totalDuration)-(layer.start??0)} color={layer.textColor}/> : <div className={`editable-text editable-text--${layer.textStyle ?? 'panel'}`} style={{color:layer.textColor || '#ffffff'}}>{layer.text}</div>}</div>
                 {editorMode && selectedLayerId === layer.id && <><span className="layer-name">{layer.type === 'card' ? '按住 Option 拖动整卡' : layer.type === 'image' ? 'IMAGE' : 'TEXT'}</span><button className="layer-remove" type="button" onPointerDown={(event) => event.stopPropagation()} onClick={(event) => { event.stopPropagation(); removeLayer(layer.id) }} aria-label="移除图层">×</button><span className="canvas-resize-handle" onPointerDown={(event) => beginCanvasGesture(event, layer, 'resize')} aria-label="拖动缩放图层" /></>}
               </div>
   }
   const renderCaptionCue=(cue:SubtitleCue)=>{
     return <div key={cue.id}>{cue.text}</div>
   }
-  const renderCanvas = (<div ref={canvasRef} className={`canvas-screen ${videoSource ? 'has-video' : ''} ${editorMode ? 'is-editing' : ''}`} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = 'copy' }} onDrop={handleCanvasDrop} onPointerDown={(event) => { if (event.target === event.currentTarget) { setSelectedLayerId(null); setSelectedPart(null) } }}>
+  const renderCanvas = (<div ref={canvasRef} className={`canvas-screen ${videoSource ? 'has-video' : ''} ${canvasLayers.some(l=>l.story)?'has-story-template':''} ${canvasLayers.some(l=>l.review)?'has-review-template':''} ${editorMode ? 'is-editing' : ''}`} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = 'copy' }} onDrop={handleCanvasDrop} onPointerDown={(event) => { if (event.target === event.currentTarget) { setSelectedLayerId(null); setSelectedPart(null) } }}>
               {(!RENDER_JOB||renderFull)&&captionStyle.enabled&&<div className="timeline-caption" style={{fontFamily:captionStyle.fontFamily,fontSize:`${captionStyle.fontSize/CANVAS_WIDTH*100}cqw`,color:captionStyle.color,bottom:`${captionStyle.bottom}%`,WebkitTextStroke:`${captionStyle.strokeWidth/CANVAS_WIDTH*100}cqw #000`,paintOrder:'stroke fill'}}>{cues.filter(c=>currentTime>=c.start&&currentTime<c.end).map(renderCaptionCue)}</div>}
-              {(!RENDER_JOB || renderFull) && <PresenterLayout settings={presenter} clips={layoutClips} rendering={Boolean(RENDER_JOB)} guides={showLayoutGuides} time={currentTime} playing={playing} aspect={CANVAS_ASPECT_RATIO}>{videoSource ? <video ref={previewVideoRef} className="imported-video" src={videoSource.url} muted={videoMuted || Boolean(RENDER_JOB)} playsInline preload="auto" onLoadedMetadata={event => { const length = event.currentTarget.duration; event.currentTarget.volume = videoVolume / 100; if (Number.isFinite(length)) {setVideoDuration(length);if(restoredTimeRef.current!==null){event.currentTarget.currentTime=Math.min(restoredTimeRef.current,length);restoredTimeRef.current=null}} }} onCanPlay={event => { setMediaError(''); if (playing && !RENDER_JOB) void event.currentTarget.play().catch(error => { if (error?.name !== 'AbortError' && error?.name !== 'NotAllowedError') { setPlaying(false); setMediaError('视频播放未能开始；请重试视频。') } }) }} onSeeked={event => { if(!RENDER_JOB){clockRef.current = event.currentTarget.currentTime; setCurrentTime(event.currentTarget.currentTime)} }} onEnded={() => setPlaying(false)} onError={event => { const code=event.currentTarget.error?.code;setMediaError(code===2?'本地视频读取中断，请点击“重试视频”。':code===3?'浏览器解码中断，请点击“重试视频”。':code===4?'当前浏览器不支持此视频的编码，请导入 H.264/AAC MP4。':'视频暂时无法播放，请点击“重试视频”。');setPlaying(false) }} /> : <span className="presenter-empty">请先导入人物视频</span>}</PresenterLayout>}
+              {(!RENDER_JOB || renderFull) && <PresenterLayout settings={presenter} clips={layoutClips} rendering={Boolean(RENDER_JOB)} guides={showLayoutGuides} time={currentTime} playing={playing} aspect={CANVAS_ASPECT_RATIO}>{videoSource ? <video ref={previewVideoRef} className="imported-video" data-render-ignore={canvasLayers.some(l=>l.story)?true:undefined} src={videoSource.url} muted={previewSourceGain===0 || reviewVoiceActive || Boolean(RENDER_JOB)} playsInline preload="auto" onLoadedMetadata={event => { const length = event.currentTarget.duration; event.currentTarget.volume = previewSourceGain; if (Number.isFinite(length)) {setVideoDuration(length);if(restoredTimeRef.current!==null){event.currentTarget.currentTime=Math.min(restoredTimeRef.current,length);restoredTimeRef.current=null}} }} onCanPlay={event => { setMediaError(''); if (playing && !RENDER_JOB) void event.currentTarget.play().catch(error => { if (error?.name !== 'AbortError' && error?.name !== 'NotAllowedError') { setPlaying(false); setMediaError('视频播放未能开始；请重试视频。') } }) }} onSeeked={event => { if(!RENDER_JOB){clockRef.current = event.currentTarget.currentTime; setCurrentTime(event.currentTarget.currentTime)} }} onEnded={() => setPlaying(false)} onError={event => { const code=event.currentTarget.error?.code;setMediaError(code===2?'本地视频读取中断，请点击“重试视频”。':code===3?'浏览器解码中断，请点击“重试视频”。':code===4?'当前浏览器不支持此视频的编码，请导入 H.264/AAC MP4。':'视频暂时无法播放，请点击“重试视频”。');setPlaying(false) }} /> : (RENDER_JOB||canvasLayers.some(l=>l.review))?null:<span className="presenter-empty">请先导入人物视频</span>}</PresenterLayout>}
               {currentPresenter.mode !== 'full' && <div className={`layout-fill-backdrop layout-fill-backdrop--${currentPresenter.mode}${currentPresenter.backdrop?` layout-fill-backdrop--${currentPresenter.backdrop}`:''}`} aria-hidden="true" />}
               <div className="canvas-material-plane">{canvasLayers.filter(l=>l.type==='image').map(renderLayer)}</div>
               <div className="canvas-effect-plane">{canvasLayers.filter(l=>l.type!=='image').map(renderLayer)}</div>
@@ -1674,13 +1740,14 @@ export default function App() {
   return (
     <main className="app-shell">
       {draft.opening&&<div className="draft-loading" role="status">正在恢复本地草稿，请稍候…</div>}
-      <ExportPanel kind={exportKind} open={exportOpen} close={() => setExportOpen(false)} duration={totalDuration} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} makePayload={makeExportPayload} />
+      <ExportPanel kind={exportKind} open={exportOpen} close={() => setExportOpen(false)} duration={totalDuration} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} makePayload={makeExportPayload} sourceMediaId={videoSource?.url.match(/^\/__studio\/media\/([a-f0-9-]{36})$/)?.[1]} />
       <header className="topbar">
         <div className="brand"><span className="brand-mark"><i /><i /><i /></span><span>动效预览台</span><small>MOTION SYSTEM / V.01</small></div>
         <div className="topbar-center"><span className="status-dot" /> PREVIEW READY</div>
         <div className="edit-history-actions"><button type="button" onClick={undoEdit} disabled={!editHistory.current.current || (sameEdit(editHistory.current.current, editSnapshot) && !editHistory.current.past.length)} title="撤回上一步（⌘Z）">↶ 撤回</button><button type="button" onClick={redoEdit} disabled={!editHistory.current.future.length || !editHistory.current.current || !sameEdit(editHistory.current.current, editSnapshot)} title="重做（⌘⇧Z）">↷ 重做</button></div>
         <button className="export-button" type="button" onClick={() => { setExportKind('mov');setPlaying(false); setExportOpen(true) }}><ExportIcon /> 导出透明 MOV</button>
         <button className="export-button" type="button" onClick={() => { setExportKind('mp4');setPlaying(false); setExportOpen(true) }}><ExportIcon /> 导出完整视频 MP4</button>
+        <a className="template-library-entry" href="/?templateLab" target="_blank" rel="noopener noreferrer" title="在新标签页打开模板实验台">模板实验台 ↗</a>
       </header>
 
       <div className="workspace">
@@ -1709,9 +1776,9 @@ export default function App() {
             <input className="playhead-slider" aria-label="播放进度" onInput={event => { setPlaying(false); seek(Number(event.currentTarget.value)) }} type="range" min={0} max={totalDuration} step={0.01} value={Math.min(currentTime, totalDuration)} onChange={event => { setPlaying(false); seek(Number(event.target.value)) }} />
             <span className="duration-label">{timeLabel(totalDuration)}</span>
           </div>
-          <MultiTrack items={trackItems} time={currentTime} duration={totalDuration} seek={trackSeek} cues={cues} onCues={setCues} caption={captionStyle} onCaption={setCaptionStyle} importVideo={()=>videoInputRef.current?.click()} importMaterial={()=>{importToTrack.current=true;materialInputRef.current?.click()}} importSubtitle={()=>srtInputRef.current?.click()}/>
+          <MultiTrack items={trackItems} time={currentTime} duration={!videoDuration&&canvasLayers.some(l=>l.review)?Math.max(30,totalDuration+2):totalDuration} seek={trackSeek} cues={cues} onCues={setCues} caption={captionStyle} onCaption={setCaptionStyle} importVideo={()=>videoInputRef.current?.click()} importMaterial={()=>{importToTrack.current=true;materialInputRef.current?.click()}} importSubtitle={()=>srtInputRef.current?.click()}/>
           <AudioLibrary clips={audioClips} onChange={setAudioClips} duration={totalDuration} time={currentTime}/>
-          <AudioPreview clips={audioClips} time={currentTime} playing={playing}/>
+          <AudioPreview clips={[...audioClips,...reviewClips]} time={currentTime} playing={playing}/>
           <div className="preview-footer"><span>从左侧拖入卡片或点击＋添加</span><span>{canvasLayers.length} 个图层 · {showOverlayLayers ? '显示中' : '已隐藏'}</span></div>
         </section>
 
@@ -1765,6 +1832,8 @@ export default function App() {
                 <div className="editor-position"><Field label="开始时间（秒）" type="number" value={Number((selectedLayer.start ?? 0).toFixed(2))} onChange={value => { const start = Math.max(0, Math.min((selectedLayer.end ?? totalDuration) - .1, Number(value) || 0)); updateLayer(selectedLayer.id, { start, end: selectedLayer.end ?? totalDuration }); seek(start + .05) }} /><Field label="结束时间（秒）" type="number" value={Number((selectedLayer.end ?? totalDuration).toFixed(2))} onChange={value => updateLayer(selectedLayer.id, { start: selectedLayer.start ?? 0, end: Math.max((selectedLayer.start ?? 0) + .1, Math.min(videoDuration || 86400, Number(value) || .1)) })} /></div>
                 <div className="duration-editor"><Field label="持续时长（秒）" type="number" value={Number(((selectedLayer.end ?? totalDuration) - (selectedLayer.start ?? 0)).toFixed(2))} onChange={value => updateLayer(selectedLayer.id, { end: Math.min(videoDuration || 86400, (selectedLayer.start ?? 0) + Math.max(.5, Number(value) || .5)) })} /><div className="duration-buttons"><button type="button" onClick={() => updateLayer(selectedLayer.id, {end: Math.min(videoDuration || 86400, (selectedLayer.end ?? totalDuration) + 1)})}>＋1 秒</button><button type="button" onClick={() => updateLayer(selectedLayer.id, {end: Math.min(videoDuration || 86400, (selectedLayer.end ?? totalDuration) + 3)})}>＋3 秒</button><button type="button" onClick={() => updateLayer(selectedLayer.id, {end: Math.max((selectedLayer.start ?? 0) + .5, (selectedLayer.end ?? totalDuration) - 1)})}>－1 秒</button></div></div>
                 {selectedLayer.type !== 'image' && <label className="control-field"><span>整层字体</span><select value={selectedLayer.fontFamily ?? FONT_OPTIONS[0].value} onChange={event => updateLayer(selectedLayer.id, {fontFamily:event.target.value})}>{FONT_OPTIONS.map(font => <option key={font.label} value={font.value}>{font.label}</option>)}</select></label>}
+                {selectedLayer.story&&<p className="editor-hint">全片模板包含 {selectedLayer.story.scenes.length} 个语义镜头；内容可在全片编辑器中修改。<button onClick={()=>void draft.save().then(saved=>location.assign('/?storyLab&draft='+saved.id)).catch(e=>setArrangeMessage(e.message))}>打开全片编辑器</button></p>}
+                {selectedLayer.review&&<ReviewInstanceControls binding={selectedLayer.review} onChange={patch=>changeReviewParams(selectedLayer,patch)} onOpen={()=>void openReviewEditor(selectedLayer)} onRetry={()=>setReviewRetry(n=>n+1)}/>}
                 {selectedLayer.script && <div className="script-editor">
                   <label className="control-field"><span>动效样式（保留文案）</span><select value={selectedLayer.sceneId} onChange={event=>{ const sceneId=event.target.value as ScriptTemplate; const script={...selectedLayer.script!}; if(['compare','beforeafter','triad','docrelay','growthpath'].includes(sceneId)){const count=['compare','beforeafter'].includes(sceneId)?2:3;script.items=Array.from({length:count},(_,i)=>script.items[i]||`要点 ${i+1}`)} if(['fan','bubbles','ribbon','orbitflow','embed','merge','rail','list','tags','timeline','loop','agenda','symbol','questionstack','appburst','choicehub','checknote','filedrawer'].includes(sceneId)&&!script.items.length)script.items=['输入内容','输出结果']; if(['metric','progress','ring','gauge'].includes(sceneId)&&!script.value)script.value='0%';if(sceneId==='symbol')script.palette='symbol';if(referenceScenes.includes(sceneId as typeof referenceScenes[number])&&!script.title.trim())script.title=scenes.find(scene=>scene.id===sceneId)?.description??'重点内容';updateLayer(selectedLayer.id,{sceneId,script});setActiveScene(sceneId);setSelectedPart(null) }}>{scriptTemplates.map(template=><option key={template.id} value={template.id}>{template.label}</option>)}</select></label>
                   <label className="control-field"><span>动效风格</span><select value={selectedLayer.script.palette??'flow'} onChange={event=>updateScript({palette:event.target.value as ScriptContent['palette']})}><option value="flow">流程数据 · 团队能力</option><option value="indigo">现有 · 蓝紫 / 橙色</option><option value="blue">现有 · 清晰蓝 / 青色</option><option value="warm">现有 · 暖橙 / 深蓝</option><option value="symbol">符号叙事</option></select></label>

@@ -3,7 +3,9 @@ dist/
 media/
 drafts/
 exports/
+output/
 .venv/
 .env*
 *.log
 .DS_Store
+*.tsbuildinfo

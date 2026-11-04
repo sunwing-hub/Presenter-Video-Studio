@@ -1,0 +1,103 @@
+{
+  "project": {
+    "presenterMode": "none",
+    "video": "must be absent",
+    "audio": "required local audio UUID; complete synchronized clip required",
+    "visualTheme": "white-flow",
+    "duration": "derived from final audio; 5–3600 seconds"
+  },
+  "scene": {
+    "title": "editable heading, up to 60 chars",
+    "labels": "up to six labels; labels are used by the specific diagram only, not a global replacement for every diagram caption",
+    "diagram": [
+      "clock",
+      "growth",
+      "contrast",
+      "focus",
+      "toolbox",
+      "barrier",
+      "problems",
+      "access",
+      "principle",
+      "deconstruct",
+      "questions",
+      "practice",
+      "pareto",
+      "pyramid",
+      "consequences",
+      "simplify",
+      "review",
+      "coach",
+      "calendar",
+      "summary",
+      "resource"
+    ],
+    "beats": "monotonic absolute seconds inside scene; deterministic progress, not CSS wall-clock animations",
+    "startEnd": "continuous full-film coverage"
+  },
+  "captions": {
+    "singleLine": true,
+    "noTrailingPunctuation": true,
+    "keywordEmphasis": true,
+    "requiresAudioAlignment": true
+  },
+  "mediaPolicy": {
+    "BGM": "{BGM_LIBRARY}",
+    "AI": "off for this production; reusable optional asset capability remains separate",
+    "paidRetries": "never automatic"
+  },
+  "limitations": [
+    "白色主题、竖屏为本次正式验收范围",
+    "更换主题内容需重新编排图解内文与声音锚点；并非输入任意音频即可无校对导出",
+    "部分思维模型图解有专用语义内文；通用标题与labels不会自动改写全部图解"
+  ],
+  "motion": {
+    "version": 2,
+    "cardSequence": [
+      "container",
+      "heading",
+      "detail"
+    ],
+    "cardHeadingDelaySecondsApprox": 0.115,
+    "cardDetailDelaySecondsApprox": 0.31,
+    "itemStaggerSeconds": [
+      0.1,
+      0.36
+    ],
+    "connectorLeadSeconds": [
+      0.14,
+      0.2
+    ],
+    "carrySeconds": 0.44,
+    "carryText": "hidden; geometry only, no double copy",
+    "deterministicSeeking": true,
+    "legacyCompatibility": "motionVersion omitted → v1 renderer"
+  },
+  "presenterOverlay": {
+    "optional": true,
+    "sourceContract": "src/templates/story/presenterOverlay.mjs",
+    "sourceClock": "piecewise segments: start/end/sourceStart/rate",
+    "muted": true,
+    "geometry": "1080x1920 coordinates; square source crop; adjustable x/y/size/border/shadow"
+  },
+  "renderPipeline": {
+    "allowed": [
+      "legacy",
+      "layered-v1"
+    ],
+    "default": "legacy",
+    "layeredScope": "single visible faceless motion-v2 layer, 9/16",
+    "cacheScope": "within export task; exact SVG state including font/layout implementation; browser animations/media reject reuse"
+  },
+  "publicProductionDiagrams": [
+    "focus",
+    "problems",
+    "barrier",
+    "consequences",
+    "toolbox",
+    "pareto",
+    "deconstruct",
+    "summary"
+  ],
+  "publicProductionRule": "发行版新题材仅使用以上参数化图解；其余为历史兼容，不作为默认新片版式"
+}

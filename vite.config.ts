@@ -4,6 +4,6 @@ import { exportServer } from './scripts/export-server.mjs'
 
 export default defineConfig({
   plugins: [react(), exportServer()],
-  server: { host: '127.0.0.1', fs: { deny: ['**/exports/**', '**/.git/**', '**/.env*'] } },
+  server: { host: '127.0.0.1', watch: { usePolling: true, interval: 500 }, fs: { deny: ['**/exports/**', '**/.git/**', '**/.env*'] } },
   preview: { host: '127.0.0.1' },
 })

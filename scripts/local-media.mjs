@@ -1,3 +1,4 @@
+import {sourceInfo,seekableSource} from './source-performance.mjs'
 import {mkdir,open,readFile,writeFile,stat,unlink,rename} from 'node:fs/promises'
 import {createReadStream} from 'node:fs'
 import {resolve} from 'node:path'
@@ -21,7 +22,8 @@ export function parseByteRange(header,size){
 
 // Some .mp4-named exports are actually QuickTime files with PCM audio. Keep
 // the original bytes and remux only the browser preview (H.264 stays lossless).
-export async function browserMedia(meta){
+export async function browserMedia(meta,options={}){
+ if(options.render&&meta.type==='video'){const base=await browserMedia(meta);const result=await seekableSource(base.file,options);return {...base,...result,mime:'video/mp4'}}
  const original=resolve(mediaDir,meta.id)
  if(meta.type!=='video')return {file:original,mime:meta.mime}
  const handle=await open(original,'r'),header=Buffer.alloc(12)
@@ -53,7 +55,9 @@ export async function getMedia(id){
  const meta=JSON.parse(await readFile(resolve(mediaDir,`${id}.json`),'utf8'))
  return {...meta,file:resolve(mediaDir,id)}
 }
-export async function mediaRoute(req,res,path){
+export async function mediaRoute(req,res,path,options={}){
+ const info=path.match(/^\/__studio\/media\/([a-f0-9-]{36})\/info$/)
+ if(info&&req.method==='GET'){const m=await getMedia(info[1]);const result=m.type==='video'?await sourceInfo(m.file):{fps:30,sourceFps:null};res.setHeader('Content-Type','application/json');res.end(JSON.stringify(result));return true}
  if(path==='/__studio/media'&&req.method==='POST'){
   const mime=(req.headers['content-type']||'').split(';')[0]
   if(!['video/mp4','video/quicktime','video/webm','image/png','image/jpeg','image/webp','audio/mpeg','audio/mp3','audio/mp4','audio/x-m4a','audio/wav','audio/x-wav','audio/aac','audio/ogg','audio/flac','audio/webm'].includes(mime))throw Error('请选择常见视频、图片或 MP3、M4A、WAV 音频')
@@ -66,7 +70,7 @@ export async function mediaRoute(req,res,path){
  }
  const match=path.match(/^\/__studio\/media\/([a-f0-9-]{36})$/)
  if(match&&['GET','HEAD'].includes(req.method)){
-  const m=await getMedia(match[1]),browser=await browserMedia(m),size=(await stat(browser.file)).size
+  const m=await getMedia(match[1]),browser=await browserMedia(m,options),size=(await stat(browser.file)).size
   const range=req.headers.range?parseByteRange(req.headers.range,size):{start:0,end:size-1}
   res.setHeader('Accept-Ranges','bytes')
   if(!range){res.statusCode=416;res.setHeader('Content-Range',`bytes */${size}`);res.end();return true}

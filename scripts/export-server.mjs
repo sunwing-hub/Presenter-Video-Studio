@@ -1,3 +1,8 @@
+import {sourceAudioGain} from './source-audio.mjs'
+import {generationRoute} from './generation-server.mjs'
+import {validateStory} from '../src/templates/story/storyModel.mjs'
+import {validateReviewBinding,reviewSignature} from '../src/templates/reviewTimeline.mjs'
+import {reviewRoute} from './review-export.mjs'
 import { spawn } from 'node:child_process'
 import { copyFile, mkdir, rename, stat, unlink } from 'node:fs/promises'
 import { createReadStream } from 'node:fs'
@@ -66,11 +71,16 @@ export function validateExport(body) {
   if(!expected || c.width!==expected[0] || c.height!==expected[1]) throw Error('画布比例与尺寸不匹配，请在工作台重新选择比例。')
   if (!Array.isArray(p.canvasLayers) || (body.kind!=='mp4'&&!p.canvasLayers.length) || p.canvasLayers.length>500) throw Error('请先添加动效或文字（最多 500 层）。')
   if (body.kind!=='mp4'&&!p.canvasLayers.some(l=>l.visible !== false)) throw Error('没有可导出的可见图层。')
+  if(p.finalAudioCopy!==undefined&&!/^[a-f0-9-]{36}$/.test(p.finalAudioCopy?.mediaId??''))throw Error('最终音轨复用素材无效')
+  if(p.renderPipeline!==undefined&&!['legacy','layered-v1'].includes(p.renderPipeline))throw Error('渲染管线无效')
+  sourceAudioGain(p,body.duration)
+  for(const l of p.canvasLayers??[])if(l.story){if(l.story.cues===undefined&&Array.isArray(p.cues))l.story={...l.story,cues:structuredClone(p.cues)}}
+  if(p.cues===undefined){const story=p.canvasLayers?.find(l=>l.story)?.story;if(story?.cues)p.cues=structuredClone(story.cues)}
   p.audioClips=validateAudio(p.audioClips??[],body.duration)
   if(body.kind==='mp4'){
     p.captionStyle=validateCaption(p.captionStyle)
     p.cues=validateCues(p.cues??[])
-    if(!/^[a-f0-9-]{36}$/.test(body.mainMediaId??''))throw Error('请导入人物视频')
+    if(!/^[a-f0-9-]{36}$/.test(body.mainMediaId??'')&&!(body.mainMediaId===undefined&&p.canvasLayers.some(l=>l.review||l.story?.presenterMode==='none')))throw Error('请导入人物视频或无露脸声音工程')
     p.layouts=validateLayouts(p.layouts??[],body.duration)
     if(p.presenter)validateLayouts([{id:'fallback',start:0,end:body.duration,settings:p.presenter,transition:0,offset:0}],body.duration)
     // Split/circle layouts can be filled by the editable motion-card plane.
@@ -79,12 +89,24 @@ export function validateExport(body) {
     if(p.presenter?.mode&&p.presenter.mode!=='full'&&(p.layouts.length===0||p.layouts[0].start>0||p.layouts.at(-1).end<body.duration||p.layouts.some((c,i)=>i>0&&c.start>p.layouts[i-1].end)))throw Error('布局空档没有内容素材，请把上方默认人物布局设为人物全屏，或用布局时间段覆盖整个视频。')
   }
   for(const layer of p.canvasLayers) {
+    if(layer.story){layer.story=validateStory(layer.story);if(layer.story.presentationStyle==='warm-editorial'){if(c.aspectRatio!=='9/16')throw Error('暖纸模板目前仅支持竖屏9:16');if(p.videoMuted!==true||!p.audioClips.some(a=>a.mediaId===layer.story.audio?.id&&a.start===0&&Math.abs(a.end-body.duration)<.01&&a.offset===0&&a.loop===false))throw Error('暖纸模板需要人物原片静音并绑定完整预混音轨');}if(layer.type!=='card'||layer.sceneId!=='team-story'||layer.start!==0||Math.abs(layer.end-layer.story.duration)>.01||Math.abs(body.duration-layer.story.duration)>.01)throw Error('全片模板需要从零完整覆盖口播');if(body.mainMediaId!==layer.story.video?.id)throw Error('全片模板与主口播素材不一致');if(layer.story.presenterMode==='none'&&!p.audioClips.some(a=>a.mediaId===layer.story.audio.id&&a.start===0&&Math.abs(a.end-body.duration)<.01&&a.offset===0&&a.loop===false))throw Error('无露脸工程缺少完整同步音轨')}
+
+    if(layer.review){
+      layer.review=validateReviewBinding(layer.review)
+      if(c.aspectRatio!=='16/9'||layer.type!=='card'||layer.sceneId!=='team-review')throw Error('成果审阅需要横屏 16:9 模板图层')
+      if(Math.abs((layer.end??0)-(layer.start??0)-layer.review.project.params.duration)>.01)throw Error('模板内部时长与片段不一致')
+      if(layer.visible!==false&&(layer.review.signature!==reviewSignature(layer.review.project)||!layer.review.audio))throw Error('模板声音尚未更新')
+      if(layer.visible!==false&&!p.audioClips.some(a=>a.id==='template-mix:'+layer.id&&a.mediaId===layer.review.audio.id&&a.start===layer.start&&a.end===layer.end&&a.offset===0&&a.loop===false))throw Error('模板声音与时间轴没有同步')
+    }
+
     if(!layer || !['card','text','image'].includes(layer.type) || !['x','y','width','height','fontSize','zIndex'].every(k=>Number.isFinite(layer[k]))) throw Error('图层位置或尺寸无效。')
     if(layer.width<=0 || layer.height<=0 || (layer.start!==undefined && (!Number.isFinite(layer.start)||!Number.isFinite(layer.end)||layer.start<0||layer.end<=layer.start))) throw Error('图层时间或大小无效。')
     if(layer.type==='image' && layer.mediaType==='video') {
       if(!/^\/__studio\/media\/[a-f0-9-]{36}$/.test(layer.assetUrl || '') || !Number.isFinite(layer.sourceOffset??0) || (layer.sourceOffset??0)<0) throw Error('视频素材地址或起始时间无效。')
     } else if(layer.type==='image' && !localMediaUrl.test(layer.assetUrl || '') && (!imageDataUrl.test(layer.assetUrl || '') || layer.assetUrl.length>45e6)) throw Error(`图片「${layer.assetName || layer.id}」地址无效或过大，请重新导入本地图片。`)
   }
+  const reviewLayers=p.canvasLayers.filter(l=>l.visible!==false&&l.review).sort((a,b)=>a.start-b.start)
+  if(reviewLayers.some((l,i)=>i&&l.start<reviewLayers[i-1].end))throw Error('完整模板场景暂不支持重叠')
   for(const image of [body.sourceImage,body.insertImage]) if(image && (!/^data:image\/(png|jpeg|webp|gif);base64,/.test(image.url) || image.url.length>45e6)) throw Error('图片仅支持本地 PNG、JPEG、WebP、GIF，单张不超过 32MB。')
   body.fileName=safeFileName(body.fileName,body.kind==='mp4'?'mp4':'mov')
   return body
@@ -180,6 +202,8 @@ export function exportServer() {
     try {
       if(!/^http:\/\/(127\.0\.0\.1|localhost):\d+$/.test(origin) || (req.headers.origin && req.headers.origin!==origin)) return reply(403,{error:'仅允许同源本机请求'})
       const path=new URL(req.url,origin).pathname
+      if(await generationRoute(req,res,path))return
+      if(await reviewRoute(req,res,path,origin))return
       if(await draftRoute(req,res,path))return
       if(await transcriptionRoute(req,res,path))return
       if(await mediaRoute(req,res,path))return
@@ -203,7 +227,12 @@ export function exportServer() {
         for(const layer of payload.project.canvasLayers)if(layer.type==='image'&&layer.mediaType==='video'){
           const media=await getMedia(layer.assetUrl.split('/').at(-1));if(media.type!=='video')throw Error('视频图层需要视频素材')
         }
-        if(payload.kind==='mp4'){await getMedia(payload.mainMediaId);for(const c of payload.project.layouts)if(c.mediaId)await getMedia(c.mediaId)}
+        if(payload.kind==='mp4'){if(payload.mainMediaId)await getMedia(payload.mainMediaId);for(const c of payload.project.layouts)if(c.mediaId)await getMedia(c.mediaId)}
+        for(const l of payload.project.canvasLayers)if(l.review)for(const [role,m] of Object.entries(l.review.project.media)){if(m){const actual=await getMedia(m.id);if(role==='video'?actual.type!=='video':actual.type!=='audio')throw Error('模板素材类型错误')}}
+        for(const layer of payload.project.canvasLayers)for(const scene of layer.story?.scenes??[])if(scene.broll){const m=await getMedia(scene.broll.mediaId);if(m.type!=='video'||m.generation?.jobId!==scene.broll.jobId||m.generation.mode!==scene.broll.mode||Math.abs(m.duration-scene.broll.sourceDuration)>.05)throw Error('场景镜头与已入库生成素材不一致')}
+        for(const layer of payload.project.canvasLayers)if(layer.story?.presenterOverlay){if(payload.project.canvas.aspectRatio!=='9/16')throw Error('人物圆窗目前仅支持竖屏');const m=await getMedia(layer.story.presenterOverlay.mediaId);if(m.type!=='video')throw Error('人物圆窗需要视频素材')}
+        for(const layer of payload.project.canvasLayers)for(const brand of layer.story?.brands??[]){const m=await getMedia(brand.logoMediaId);if(m.type!=='image')throw Error('品牌Logo需要本地图像素材')}
+        if(payload.project.finalAudioCopy){const m=await getMedia(payload.project.finalAudioCopy.mediaId);if(!['audio','video'].includes(m.type))throw Error('最终音轨复用需要音视频素材')}
         for(const c of payload.project.audioClips){const m=await getMedia(c.mediaId);if(m.type!=='audio')throw Error('音效轨道只能放音频素材')}
         await mkdir(outputDir,{recursive:true})
         const job={id,status:'preparing',frame:0,total:Math.ceil(payload.duration*payload.fps),payload,file:await availableOutput(payload.fileName),fileName:payload.fileName}
@@ -234,7 +263,7 @@ export function exportServer() {
         res.setHeader('Content-Type',job.fileName.endsWith('.mp4')?'video/mp4':'video/quicktime');res.setHeader('Content-Disposition',`attachment; filename*=UTF-8''${encodeURIComponent(job.fileName)}`)
         res.setHeader('Content-Length',String(job.bytes));createReadStream(job.file).pipe(res);return
       }
-      if(!match[2] && req.method==='GET') return reply(200,{id:job.id,status:job.status,frame:job.frame,total:job.total,error:job.error,bytes:job.bytes,fileName:job.fileName,path:job.status==='done'?job.file:undefined})
+      if(!match[2] && req.method==='GET') return reply(200,{id:job.id,status:job.status,frame:job.frame,total:job.total,reusedFrames:job.reusedFrames,crossJobReusedFrames:job.crossJobReusedFrames,error:job.error,bytes:job.bytes,fileName:job.fileName,path:job.status==='done'?job.file:undefined})
       reply(405,{error:'不支持此操作'})
     }catch(error){reply(400,{error:String(error.message || error)})}
   }) }

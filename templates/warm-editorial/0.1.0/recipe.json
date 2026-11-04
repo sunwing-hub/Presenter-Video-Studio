@@ -1,0 +1,23 @@
+{
+  "template": "team.warm-editorial@0.1.0",
+  "steps": [
+    "读取README和controls，按新口播与字幕规划镜头",
+    "导入素材至当前本机工作台，取得video/audio素材ID；先完成变速与音频混合",
+    "填写计划：header、duration、video、audio、scenes、cues；scene.content所有字段显式填写，不从样片继承事实",
+    "运行create-warm-editorial.mjs生成新工程；--save-draft保存到当前端口的中台",
+    "逐镜预览数字、正文与人物窗口过渡；核对单行字幕、事实来源与范围",
+    "用render-studio-project.mjs输出新文件，检查最终音乐可闻性与峰值，完成发布"
+  ],
+  "factory": "node scripts/create-warm-editorial.mjs 新方案.json 新工程.json --save-draft",
+  "render": "node scripts/render-studio-project.mjs 新工程.json 新成片.mp4",
+  "origin": "脚本通过STUDIO_ORIGIN/OVERLAY_STUDIO_URL/OVERLAY_STUDIO_PORT跟随本机环境",
+  "inputExample": "sample-plan.json",
+  "outputExample": "sample-project.json",
+  "sampleAcceptance": {
+    "video": "微软裁员-自由剪辑-v1.2-视频号竖屏.mp4",
+    "userAccepted": true,
+    "date": "2026-10-30",
+    "portablePreview": "/reference-templates/warm-editorial/sample.mp4",
+    "projectMedia": "示例工程UUID属于原制作机器；迁移必须重新导入人物视频与完整混音并更新ID"
+  }
+}

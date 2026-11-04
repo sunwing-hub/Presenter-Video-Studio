@@ -1,0 +1,24 @@
+{
+  "id": "team.scene-narration",
+  "name": "场景叙事口播",
+  "version": "0.2.1-native",
+  "kind": "native-template",
+  "status": "图解文案参数化 + evidence 证据版式；15 组回归测试通过，待新片验收",
+  "nativeDedicatedRenderer": true,
+  "renderer": "src/templates/story/NarrativeScene.tsx",
+  "controls": "controls.json",
+  "defaultVisualTheme": "dark-tech",
+  "allowedVisualThemes": [
+    "dark-tech"
+  ],
+  "verifiedCanvas": "9/16",
+  "previewUrl": "/reference-templates/scene-narration/native.html",
+  "revisionNotes": [
+    "access/skills/workflow/proactive/communication/model/opinion 版式文案改由 scene.labels 驱动，labels 缺省回落旧文案，历史工程复现不变",
+    "新增 evidence 证据版式：scene.evidenceMediaId 本地图片大卡（真实界面证据用，不生成假 Logo/假录屏）",
+    "字幕高亮词表参数化：story.highlightLexicon，缺省回落旧词表",
+    "evidence 与 hook 共用首屏 opening 人物窗口（760px 宽留白口径）"
+  ],
+  "compatibility": "0.2.0-native 工程无需改动即可在 0.2.1 渲染器下复现",
+  "distributionNote": "仅包含制作模板与参数规范；本地研究、参考原片和历史草稿不分发。"
+}

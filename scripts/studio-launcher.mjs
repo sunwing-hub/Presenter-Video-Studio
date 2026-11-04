@@ -36,6 +36,7 @@ async function install(){
  if(!ffmpeg||!await exists(ffmpeg))await node(['node_modules/ffmpeg-static/install.js'])
  console.log('正在安装导出视频使用的 Chromium…')
  await node(['node_modules/playwright/cli.js','install','chromium'])
+ await node(['scripts/template-catalog.mjs'])
  await node(['node_modules/typescript/bin/tsc','-b'])
  await node(['node_modules/vite/bin/vite.js','build'])
  await doctor()
@@ -67,6 +68,7 @@ async function ready(url){
  try{const response=await fetch(`${url}__studio/drafts`,{signal:AbortSignal.timeout(1000)});return response.ok&&Array.isArray(await response.json())}catch{return false}
 }
 async function start(){
+ await node(['scripts/template-catalog.mjs'])
  if(!await exists(join(root,'node_modules/vite/bin/vite.js')))throw Error('请先运行安装工作台。')
  const port=Number(process.env.OVERLAY_STUDIO_PORT||5173)
  if(!Number.isInteger(port)||port<1024||port>65535)throw Error('OVERLAY_STUDIO_PORT 需要是 1024–65535 的端口。')
