@@ -20,5 +20,6 @@
     "evidence 与 hook 共用首屏 opening 人物窗口（760px 宽留白口径）"
   ],
   "compatibility": "0.2.0-native 工程无需改动即可在 0.2.1 渲染器下复现",
-  "distributionNote": "仅包含制作模板与参数规范；本地研究、参考原片和历史草稿不分发。"
+  "distributionNote": "仅包含制作模板与参数规范；本地研究、参考原片和历史草稿不分发。",
+  "releaseChannel": "production"
 }

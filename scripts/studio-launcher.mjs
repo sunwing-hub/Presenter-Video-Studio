@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import {readPreferences,savePreferences} from './preferences.mjs'
+import {createInterface} from 'node:readline/promises'
 import {spawn} from 'node:child_process'
 import {access,readFile,mkdir} from 'node:fs/promises'
 import {resolve,dirname,join} from 'node:path'
@@ -24,6 +26,16 @@ function run(command,argv,options={}){
 const node=(argv,options)=>run(process.execPath,argv,options)
 const packageManager=await readFile(join(root,'package.json'),'utf8').then(JSON.parse)
 async function install(){
+ if(!await readPreferences()){
+  if(!process.stdin.isTTY)throw Error('首次安装需询问用户：使用默认剪辑标准还是自定标准？默认选择经用户确认后运行 node scripts/preferences.mjs defaults；自定义运行 node scripts/preferences.mjs custom 标准.json，然后重试安装。')
+  const ui=createInterface({input:process.stdin,output:process.stdout})
+  try{const answer=(await ui.question('首次使用：系统中文字体、单行字幕、自选曲库、稀疏音效、-16 LUFS、原速。使用默认[d]还是自定[c]？')).trim().toLowerCase()
+   if(answer==='d')await savePreferences({mode:'default'})
+   else if(answer==='c'){const file=await ui.question('自定义标准JSON文件路径（也可取消后让助手协助填写）：');await savePreferences({mode:'custom',settings:JSON.parse(await readFile(resolve(file.trim()),'utf8'))})}
+   else throw Error('尚未确认制作标准；可在下次安装时选择。')
+  }finally{ui.close()}
+ }
+
  console.log('首次安装需要联网：正在安装锁定版本的项目依赖…')
  // The package ships a pnpm lockfile. Use the same pnpm release even when
  // the recipient has only the standard Node.js + npm installation.

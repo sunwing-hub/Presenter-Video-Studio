@@ -28,5 +28,6 @@
     ]
   },
   "provenance": "沿用已获认可的微软裁员v1.2设计；数字运动适配Wise Motion Apache-2.0参考，许可随模板保留；原定制渲染器保留兼容历史工程。",
-  "distributionNote": "仅包含制作模板与参数规范；本地研究、参考原片和历史草稿不分发。"
+  "distributionNote": "仅包含制作模板与参数规范；本地研究、参考原片和历史草稿不分发。",
+  "releaseChannel": "production"
 }

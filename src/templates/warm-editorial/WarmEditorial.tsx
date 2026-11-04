@@ -13,7 +13,7 @@ export function WarmEditorial({project,time,playing=false,rendering=false}:{proj
  return <div data-story-stage data-scene={s.id} style={{position:'relative',width:'100%',height:'100%',background:paper,overflow:'hidden'}}>
  <div className='editorial-figure' style={{position:'absolute',left:r.x/10.8+'%',top:r.y/19.2+'%',width:r.w/10.8+'%',height:r.h/19.2+'%',borderRadius:24,overflow:'hidden'}}><MaterialVideo src={'/__studio/media/'+project.video!.id} time={time} start={0} end={project.duration} playing={playing} rendering={rendering}/>{!study&&<div style={{position:'absolute',inset:0,background:'linear-gradient(0deg,#f0ede5 0%,#f0ede500 35%)'}}/>}</div>
  <style>{'.editorial-figure video{object-fit:cover!important;object-position:50% 30%!important}'}</style>
- <svg viewBox="0 0 1080 1920" style={{position:'absolute',inset:0,width:'100%',height:'100%',fontFamily:'"PingFang SC","Microsoft YaHei",sans-serif'}}>
+ <svg viewBox="0 0 1080 1920" style={{position:'absolute',inset:0,width:'100%',height:'100%',fontFamily:project.fontFamily??'"PingFang SC","Microsoft YaHei",sans-serif'}}>
  <Text y={64} size={26} fill={muted} weight={500}>{project.editorialHeader}</Text><path d="M80 87H1000" stroke="#b9c2b7" strokeWidth={2}/>
  {k==='opening'?<>
  {Array.from(c.value).map((v,i)=>{const d=numberLanding(local,.34+(i<2?i:2)*.16),x=160+i*(570/Math.max(3,c.value.length-1));return <g key={i} opacity={d.opacity} transform={`translate(${x} ${1300-d.height}) scale(${d.ratio} ${1/d.ratio})`}><text fontSize={Math.min(225,900/c.value.length)} fontWeight={850} fill={red} textAnchor="middle">{v}</text></g>})}

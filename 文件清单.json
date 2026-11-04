@@ -1,25 +1,25 @@
 {
-  "version": "2026.11.5",
+  "version": "2026.11.5-r2",
   "files": [
     {
       "path": ".gitignore",
-      "sha256": "3eb2a1c0910adc9f25004bb461f3164fa83d94702487bd6fb89ea236b88b60de",
-      "bytes": 108
+      "sha256": "81e534571415252eb1121516b7aab170d8a2a3deb757e8fd2373f7da2b62bb97",
+      "bytes": 135
     },
     {
       "path": "CHANGELOG.md",
-      "sha256": "01fb96ee9861043aec47c69b501e6d58b52e3634d631017a0ea1d7fbca8a13f2",
-      "bytes": 933
+      "sha256": "12c442bc58b4d30d0e1d8ca81b27639363e19fe3c9e4cfb2741f95fc24d576a1",
+      "bytes": 1106
     },
     {
       "path": "README.md",
-      "sha256": "1b97a226a4d3e9b897b6e53b2ebaca933cac65172a32af92fe12b98fa028ffbc",
-      "bytes": 6140
+      "sha256": "65365afffd860e4a1f14ef55aa5bc2e0bb107674f92879afe0baafa32df35162",
+      "bytes": 7039
     },
     {
       "path": "RELEASE-VALIDATION.md",
-      "sha256": "e1e001568c420ca4bbc9d0927030a9a549474865dd6eb625d54f7dfb1ab0df6e",
-      "bytes": 1288
+      "sha256": "eaa00c2d2a5c3ea6ffa00d36e72ad2e711f9585f5db8c49135de2eba3e4a34a6",
+      "bytes": 1878
     },
     {
       "path": "THIRD-PARTY-NOTICES.md",
@@ -37,9 +37,19 @@
       "bytes": 127619
     },
     {
+      "path": "docs/四项逻辑核验.md",
+      "sha256": "ad2b073ad16cc1c4554350c12d6d25847928d9e750df97accf33892ade45ce77",
+      "bytes": 2761
+    },
+    {
       "path": "docs/安装升级与配置.md",
-      "sha256": "f91362bd8a0a97e88d25457f1f5336b7d04521608604d7133177f938dd6ad5c5",
-      "bytes": 1784
+      "sha256": "7d3d26837bf8537245812bcae77653d3f9eb7620dcba1ba119c1d0453f1d3b15",
+      "bytes": 2188
+    },
+    {
+      "path": "docs/模板开发与迭代.md",
+      "sha256": "d162ace7f680fcc49dce721bf2aedebd06301538ee649dd48fc9da791f879656",
+      "bytes": 2971
     },
     {
       "path": "index.html",
@@ -48,8 +58,8 @@
     },
     {
       "path": "package.json",
-      "sha256": "7dd403a92dc6f8cc9f05825fc9d2fe08064bb0bb2b47160770a4ff9bbef42f47",
-      "bytes": 992
+      "sha256": "ca6f2adc3f34a84c50537aed803856eaf34e5980e1626ca89ffe37309cbc944f",
+      "bytes": 994
     },
     {
       "path": "pnpm-lock.yaml",
@@ -110,6 +120,11 @@
       "path": "scripts/create-themed-story.mjs",
       "sha256": "862642f22dfea4e1fac9de1eb98ee446946fb1c338ae35edfec175c722c3d6d3",
       "bytes": 1657
+    },
+    {
+      "path": "scripts/create-user-template.mjs",
+      "sha256": "96259e5f87ab721281e0dbab4c9c1767ee7723f63b5020b6c93a24322133bab1",
+      "bytes": 1569
     },
     {
       "path": "scripts/create-warm-editorial.mjs",
@@ -182,6 +197,21 @@
       "bytes": 1195
     },
     {
+      "path": "scripts/package-release.py",
+      "sha256": "de02282b0e3a49d4afd847ed4f80feddcc14a731236d358c34a7e04e7275b27b",
+      "bytes": 2921
+    },
+    {
+      "path": "scripts/preferences.d.mts",
+      "sha256": "f978b1e01557863565a37d2060a7983fca30465167edbf81ddc76f7c46608e06",
+      "bytes": 185
+    },
+    {
+      "path": "scripts/preferences.mjs",
+      "sha256": "20197d20a7929dee9f17cb2a31f86d240f76ddfe4cbadce657eae47c93a4e1b9",
+      "bytes": 3103
+    },
+    {
       "path": "scripts/publish-arrangement.mjs",
       "sha256": "6ed093d6c0b4554c751b7ab288bc1d7f6aa512d188c194e2b590e22758d17969",
       "bytes": 1241
@@ -213,8 +243,8 @@
     },
     {
       "path": "scripts/run-tests.mjs",
-      "sha256": "e7484b5cb1c4529532f625519713d0c62bc099deeb4a975a41432354557f31c0",
-      "bytes": 725
+      "sha256": "b345ba587d9dd9f2544280a8285ee50f25fe9bf69d931a160e1d8f6c9f0ba5cd",
+      "bytes": 739
     },
     {
       "path": "scripts/runninghub-client.mjs",
@@ -248,8 +278,8 @@
     },
     {
       "path": "scripts/studio-launcher.mjs",
-      "sha256": "633f37e957036253a2ea1ffd4e5d4619930a064d938da0ecf6857dd179189050",
-      "bytes": 5859
+      "sha256": "971d7f3e6ce5e95250662069e3251f49491118ea5c1aa653d80c82ae3bb1f571",
+      "bytes": 6968
     },
     {
       "path": "scripts/studio-origin.mjs",
@@ -263,8 +293,8 @@
     },
     {
       "path": "scripts/template-catalog.mjs",
-      "sha256": "4cd88245ad35242cb6357bd8b546d959acf48424122198fc6a8993faa01806b9",
-      "bytes": 9131
+      "sha256": "1ae073b8b015f081b8cfe2d5dbceeb37acc2a5e522a6fee4c155674d91ba6336",
+      "bytes": 9235
     },
     {
       "path": "scripts/transcribe-local.py",
@@ -277,14 +307,24 @@
       "bytes": 5399
     },
     {
+      "path": "scripts/user-settings-server.d.mts",
+      "sha256": "4a0d43936a19b63a241dd2eac6c937055a21c12a0a4b397223194fc370e0154c",
+      "bytes": 77
+    },
+    {
+      "path": "scripts/user-settings-server.mjs",
+      "sha256": "3c2e9955d50d8838af86231bf24cc9f3005edacd2235478d8d2da8d18577b0eb",
+      "bytes": 1536
+    },
+    {
       "path": "scripts/validate-arrangement.mjs",
       "sha256": "2aaa8ce5920a10023df821f4ddd751d07159dc54f09c82edcc1a64fd21b11b42",
       "bytes": 1082
     },
     {
       "path": "skills/overlay-studio-editor/SKILL.md",
-      "sha256": "47105da6ee25793344f6054c00b241a37a2d558889b9f59e77c830d80701da89",
-      "bytes": 3814
+      "sha256": "5e6d3bd6ca3fa266764268a1c08c3115bbba3ae27e35e734bed7967d3567163e",
+      "bytes": 5415
     },
     {
       "path": "skills/overlay-studio-editor/references/分层渲染与圆窗.md",
@@ -293,8 +333,8 @@
     },
     {
       "path": "skills/overlay-studio-editor/references/剪辑制作规范.md",
-      "sha256": "d996638da432b1629c61242ecf44885ebf091db865b3fea0aa538ae58db2a4d0",
-      "bytes": 9080
+      "sha256": "932a827e9593cc4a91e25ffe6d24fd6f5f369db6c7d8631820578e3bbaf6c2ff",
+      "bytes": 9464
     },
     {
       "path": "src/App.tsx",
@@ -315,6 +355,11 @@
       "path": "src/ExportPanel.tsx",
       "sha256": "651e4e86340a4fc17332c49deb265b7c80a9ccd0e2d373d5753e37315656490a",
       "bytes": 9619
+    },
+    {
+      "path": "src/FirstRunPreferences.tsx",
+      "sha256": "f10db2ad262fcf3192b1f376c3a312185a7e5c0c5b4358b71edcb6c1981a572f",
+      "bytes": 3319
     },
     {
       "path": "src/KeywordMotion.tsx",
@@ -383,8 +428,8 @@
     },
     {
       "path": "src/TemplateCenter.tsx",
-      "sha256": "d4dd970b01f65e74a303ffa4e6953736ec8ef9d3960c736aa91d47d214cc55d8",
-      "bytes": 1287
+      "sha256": "3a655a04ab48585b94dd3ea9fed71e1ce5560203c8d1fc4fccbbcbac51e3beb0",
+      "bytes": 1778
     },
     {
       "path": "src/TemplateLab.tsx",
@@ -428,8 +473,8 @@
     },
     {
       "path": "src/main.tsx",
-      "sha256": "3492191cc07bea8d70c09aa6751317d87ed10536ff660eb211142d60c29ce091",
-      "bytes": 792
+      "sha256": "8d04859dbb280985566a7e69098fa6427a36544e99e582b0cb3ddc2e176d7175",
+      "bytes": 827
     },
     {
       "path": "src/mediaPresentation.ts",
@@ -518,13 +563,13 @@
     },
     {
       "path": "src/templates/story/FacelessScene.tsx",
-      "sha256": "e827d10f9d7f73b5934f57d6521d95b85111919496e3a2bb29fb4709ff63f3eb",
-      "bytes": 21009
+      "sha256": "3e5a3ed8540c1a97a9273fc34726f7be86d91b6bb9632d62813b11a583b8072f",
+      "bytes": 21029
     },
     {
       "path": "src/templates/story/FacelessSceneV1.tsx",
-      "sha256": "b2127997f2f45edd401559653b30ecfe3ed91a93954d5002a83d1b9ac1384e72",
-      "bytes": 17642
+      "sha256": "e587404dfa0b1112615f1df843b88300aefd95e9bdfadc5cb83d451dcf077e79",
+      "bytes": 17662
     },
     {
       "path": "src/templates/story/HandbookNarrativeGraphic.tsx",
@@ -533,8 +578,8 @@
     },
     {
       "path": "src/templates/story/NarrativeScene.tsx",
-      "sha256": "34d110441cc56e4091067cf7a8ab86363bb05a8b1572001d60f1ed0eb690284e",
-      "bytes": 13969
+      "sha256": "2389ddd828ba0f8083fdac5d2717a3c763b505c9d77e54f5107a7e78083993c6",
+      "bytes": 13989
     },
     {
       "path": "src/templates/story/PresenterVideoOverlay.tsx",
@@ -588,8 +633,8 @@
     },
     {
       "path": "src/templates/story/storyModel.d.mts",
-      "sha256": "4bb7f6b003a28a047385a1afeb38c6633571adfa226b4829ef002c0d72af5ae1",
-      "bytes": 2872
+      "sha256": "ccc1ceed836c9fa7703843621cceae9eb7d5391ef985ac6fc2ede8ac31b64f99",
+      "bytes": 2891
     },
     {
       "path": "src/templates/story/storyModel.mjs",
@@ -598,8 +643,8 @@
     },
     {
       "path": "src/templates/warm-editorial/WarmEditorial.tsx",
-      "sha256": "eee85c4d79130ee1663332a52445f7f7be730f4f3d96586395a1d423f9ecf1ad",
-      "bytes": 6580
+      "sha256": "25552c85b1a3a108df3b66053d6089d783f13f99abdfa952a4aad430dc620b5e",
+      "bytes": 6600
     },
     {
       "path": "src/templates/warm-editorial/content.d.mts",
@@ -638,8 +683,8 @@
     },
     {
       "path": "templates/catalog.json",
-      "sha256": "d13ab80b341ba74b688608e259f2556e2ec439af048675164763abe883b027df",
-      "bytes": 9553
+      "sha256": "0f97bd7a9cba234b734996d3003e5dcbb889c810689f70cfe0b072d7396c8cca",
+      "bytes": 9665
     },
     {
       "path": "templates/scene-narration/0.2.1-native/controls.json",
@@ -648,13 +693,13 @@
     },
     {
       "path": "templates/scene-narration/0.2.1-native/manifest.json",
-      "sha256": "25db247648e94d0a8cc1811b27c6b2378bbd81293234eec86bf549b9ab24150a",
-      "bytes": 1236
+      "sha256": "eab297dcc0799e3d9344ba92c5a6a127f8a72aed2f0fcad9579639472e0391e0",
+      "bytes": 1270
     },
     {
       "path": "templates/team-rules.json",
-      "sha256": "94eef20a4e71c02fc2618142a8ae593dbab01dd5e9a5c708f872f3e83c349a58",
-      "bytes": 3227
+      "sha256": "8a34f1e6dfe4d83a600dbb1c42609ce29c41085888c590eb407316e1080023fc",
+      "bytes": 3443
     },
     {
       "path": "templates/warm-editorial/0.1.0/LICENSE",
@@ -678,8 +723,8 @@
     },
     {
       "path": "templates/warm-editorial/0.1.0/manifest.json",
-      "sha256": "a9f35ebaa398500bd6dbd6105eee4a75d4edaf090ac527f13d9596a9fc876413",
-      "bytes": 1421
+      "sha256": "bf2d1d5d034bb89e357b1e7e2f9004cea9c073e46a911a5ce5ac8e6ce0447e81",
+      "bytes": 1455
     },
     {
       "path": "templates/warm-editorial/0.1.0/recipe.json",
@@ -703,8 +748,8 @@
     },
     {
       "path": "templates/yanye-faceless/0.2.2/manifest.json",
-      "sha256": "cf3ab11b2322fca6435f2f8884a1c5776be516b69394feee179add4f8756f3b6",
-      "bytes": 1555
+      "sha256": "ef7487bfef0e08a41adebce1be9952c92c9bc404f23eaa2cbc6831e51d4e8cd3",
+      "bytes": 1589
     },
     {
       "path": "templates/yanye-faceless/0.2.2/recipe.json",
@@ -797,6 +842,11 @@
       "bytes": 431
     },
     {
+      "path": "tests/preferences.test.mjs",
+      "sha256": "f880e586bbcea7ecd1ad3d95089683232ea14015bcec9a3ea5ce0e97fdc01933",
+      "bytes": 1117
+    },
+    {
       "path": "tests/render-performance.test.mjs",
       "sha256": "e0ba71fe4747dd34e9f22ab3234e839eea4a9e5ad77ffca257727ab2ed3ca785",
       "bytes": 3595
@@ -873,8 +923,8 @@
     },
     {
       "path": "vite.config.ts",
-      "sha256": "bf859ab2bf24a33353e2387aa5bb0540199ef94afa739cd20e9775a5c79264cb",
-      "bytes": 378
+      "sha256": "ce9eadd3a7d110b790dcaeac131c7a2b59a58563e4653b01ac1fa1fd97c382c5",
+      "bytes": 489
     },
     {
       "path": "启动工作台.cmd",
@@ -888,8 +938,8 @@
     },
     {
       "path": "安装与使用说明.md",
-      "sha256": "bb8a76f19887acaf4d1e9fd27d91704049633ff27ea1238426b3018ab93ad760",
-      "bytes": 6652
+      "sha256": "354f9980930ceca286b1944a89ecc156896a40380ccbd731effb9bfe56eaa736",
+      "bytes": 6830
     },
     {
       "path": "安装工作台.cmd",

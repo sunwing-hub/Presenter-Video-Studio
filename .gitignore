@@ -10,3 +10,5 @@ output/
 .DS_Store
 *.tsbuildinfo
 node_modules
+user-data/
+user-templates/

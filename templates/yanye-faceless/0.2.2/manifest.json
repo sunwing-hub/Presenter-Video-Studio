@@ -25,5 +25,6 @@
     "首版为任务内缓存，不提供跨任务持久背景缓存"
   ],
   "compatibility": "0.2.0 工程无需改动即可复现",
-  "distributionNote": "仅包含制作模板与参数规范；本地研究、参考原片和历史草稿不分发。"
+  "distributionNote": "仅包含制作模板与参数规范；本地研究、参考原片和历史草稿不分发。",
+  "releaseChannel": "production"
 }

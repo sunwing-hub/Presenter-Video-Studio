@@ -67,6 +67,7 @@ function buildEntry(manifestPath, refLibrary) {
 
   return {
     id: manifest.id,
+    releaseChannel: manifest.releaseChannel || 'development',
     version: manifest.version,
     name: manifest.name,
     category,
@@ -74,7 +75,7 @@ function buildEntry(manifestPath, refLibrary) {
     description: lib?.description || manifest.description || null,
     production: {
       readyForNewFilm: category === 'native-template' || category === 'visual-theme',
-      pendingUserReview: /待用户审片|待验证|pending|review/i.test(status) && !/通过.*验收|userAccepted/.test(status),
+      pendingUserReview: /待.*(?:审|验收)|pending/i.test(status),
       statusRaw: status,
     },
     presentation: PRESENTATION[manifest.id] || null,
@@ -126,14 +127,16 @@ function buildCatalog() {
   const refLibrary = parseReferenceLibrary()
   const entries = []
   const versionsWithoutManifest = []
-  for (const tpl of fs.readdirSync(TPL_DIR, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+  for (const baseDir of [TPL_DIR,path.join(ROOT,'user-templates')].filter(p=>fs.existsSync(p))) {
+  for (const tpl of fs.readdirSync(baseDir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
     if (!tpl.isDirectory() || tpl.name === '.DS_Store') continue
-    for (const ver of fs.readdirSync(path.join(TPL_DIR, tpl.name), { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    for (const ver of fs.readdirSync(path.join(baseDir, tpl.name), { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
       if (!ver.isDirectory()) continue
-      const mf = path.join(TPL_DIR, tpl.name, ver.name, 'manifest.json')
+      const mf = path.join(baseDir, tpl.name, ver.name, 'manifest.json')
       if (fs.existsSync(mf)) entries.push(buildEntry(mf, refLibrary))
       else versionsWithoutManifest.push(`templates/${tpl.name}/${ver.name}`)
     }
+  }
   }
   const libOnly = refLibrary.filter(e => !entries.some(t => t.id.replace(/\.native$/, '') === e.id.replace(/\.native$/, '')))
   return {

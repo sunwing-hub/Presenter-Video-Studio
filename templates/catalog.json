@@ -1,6 +1,6 @@
 {
   "schema": "overlay-studio/template-catalog@1",
-  "generatedAt": "2026-11-04T16:31:09.665Z",
+  "generatedAt": "2026-11-04T16:49:03.973Z",
   "generator": "scripts/template-catalog.mjs",
   "sourceOfTruth": "templates/*/*/manifest.json（本文件为派生汇总，请勿手工编辑；改模板后重新生成）",
   "workbenchRoot": ".",
@@ -38,6 +38,7 @@
   "templates": [
     {
       "id": "team.scene-narration",
+      "releaseChannel": "production",
       "version": "0.2.1-native",
       "name": "场景叙事口播",
       "category": "native-template",
@@ -45,7 +46,7 @@
       "description": "真实截图与流程关系配合，连续人物窗口与证据重点标注。",
       "production": {
         "readyForNewFilm": true,
-        "pendingUserReview": false,
+        "pendingUserReview": true,
         "statusRaw": "图解文案参数化 + evidence 证据版式；15 组回归测试通过，待新片验收"
       },
       "presentation": "真人讲述＋场景补充＋数据关系图解；AI 只补关键场景",
@@ -99,6 +100,7 @@
     },
     {
       "id": "team.warm-editorial",
+      "releaseChannel": "production",
       "version": "0.1.0",
       "name": "暖纸数字口播",
       "category": "native-template",
@@ -106,7 +108,7 @@
       "description": "暖纸底色、砖红数字、绿色卡片与连续人物窗口。",
       "production": {
         "readyForNewFilm": true,
-        "pendingUserReview": false,
+        "pendingUserReview": true,
         "statusRaw": "userAccepted：微软裁员v1.2样片获用户认可；参数化模板待独立新片验收"
       },
       "presentation": null,
@@ -160,6 +162,7 @@
     },
     {
       "id": "team.yanye-faceless",
+      "releaseChannel": "production",
       "version": "0.2.2",
       "name": "知识付费讲解",
       "category": "native-template",

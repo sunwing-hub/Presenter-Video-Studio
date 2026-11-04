@@ -84,7 +84,7 @@ function FacelessMotionScene({project,time,portrait,graphicOnly=false}:{project:
  if(graphicOnly)return <MotionPhase.Provider value={p(0)}><g>{graphic}</g></MotionPhase.Provider>
  const previous=index>0?project.scenes[index-1]:null,carry=previous&&local<.48
  const capTokens=(caption?.text??'').split(/(第一性原理|80\/20法则|20%|80%|金字塔原理|二阶思维|逆向思考|奥卡姆剃刀|思维方式|调用成本|最小|复盘|判断|AI|3到5倍|两个小时|结论先行)/g)
- return <div className="faceless-stage" data-story-stage data-scene={s.id} data-platform={project.platform} style={{width:'100%',height:'100%',background:C.bg}}><svg viewBox={portrait?'0 0 1080 1920':'-660 0 2400 1920'} width="100%" height="100%" style={{display:'block',fontFamily:'"PingFang SC","Microsoft YaHei",sans-serif'}}>
+ return <div className="faceless-stage" data-story-stage data-scene={s.id} data-platform={project.platform} style={{width:'100%',height:'100%',background:C.bg}}><svg viewBox={portrait?'0 0 1080 1920':'-660 0 2400 1920'} width="100%" height="100%" style={{display:'block',fontFamily:project.fontFamily??'"PingFang SC","Microsoft YaHei",sans-serif'}}>
   <style>{`.faceless-stage [data-motion-carry] text{visibility:hidden}`}</style>
   <rect x={portrait?0:-660} y={0} width={portrait?1080:2400} height={1920} fill={C.bg}/>
   {carry&&<g data-motion-carry opacity={1-E(local/.44)} transform={`translate(0 ${-24*E(local/.44)})`}><FacelessMotionScene project={project} time={previous.end-.02} portrait={portrait} graphicOnly/></g>}
