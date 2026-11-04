@@ -3,8 +3,8 @@
   "files": [
     {
       "path": ".gitignore",
-      "sha256": "3011318b632946734b3aae1165583cc4ddd66680edd328c6fd6df70568f61cb9",
-      "bytes": 95
+      "sha256": "3eb2a1c0910adc9f25004bb461f3164fa83d94702487bd6fb89ea236b88b60de",
+      "bytes": 108
     },
     {
       "path": "CHANGELOG.md",
