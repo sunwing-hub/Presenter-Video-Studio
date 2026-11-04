@@ -8,13 +8,13 @@
     },
     {
       "path": "CHANGELOG.md",
-      "sha256": "12c442bc58b4d30d0e1d8ca81b27639363e19fe3c9e4cfb2741f95fc24d576a1",
-      "bytes": 1106
+      "sha256": "45c014bcb39003586aa4dce16c0acaad27252fecbcf18ec0b054ea8484839142",
+      "bytes": 1133
     },
     {
       "path": "README.md",
-      "sha256": "65365afffd860e4a1f14ef55aa5bc2e0bb107674f92879afe0baafa32df35162",
-      "bytes": 7039
+      "sha256": "0e83f677a75d4cb7d4678685bc733b285ecf6174ea7678a18e7f3d1f71ee71e9",
+      "bytes": 7361
     },
     {
       "path": "RELEASE-VALIDATION.md",
@@ -951,5 +951,6 @@
       "sha256": "f615f8d30ec9d437d9cbcd9d942dd6457a22e9855be4bb7330d965d55a45e8a1",
       "bytes": 318
     }
-  ]
+  ],
+  "releaseStatus": "testing"
 }

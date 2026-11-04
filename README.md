@@ -1,8 +1,10 @@
 # Overlay Studio · 剪辑工作台与知识讲解模板中心
 
+> **测试中，尚非正式版。** 当前不提供正式 GitHub Release。测试时请使用 Code → Download ZIP 获取源码，解压后按说明安装。文中的版本号用于区分测试构建，不代表正式验收；独立安装包与 Skill 包仍保留在作者本地。
+
 本地运行的 AI 辅助视频制作工具，包含可编辑剪辑工作台、模板中心与可独立导入的 Skill。支持 WorkBuddy、Codex 等具备本地文件和命令执行能力的桌面助手接入。AI 组织内容与编排，工作台保存工程、预览并原生导出。
 
-## 本次修订：2026.11.5-r2
+## 当前测试构建：2026.11.5-r2
 
 新增首次默认/自定标准选择和持久保存；用户自建模板与动态模板发现；可重复发布打包工具。四项核验见 [核验记录](docs/四项逻辑核验.md)。
 
@@ -54,7 +56,7 @@ npm start
 
 ## WorkBuddy 与 Codex
 
-独立技能目录：[`skills/overlay-studio-editor`](skills/overlay-studio-editor/SKILL.md)。发布附件提供同结构的 ZIP。
+独立技能目录：[`skills/overlay-studio-editor`](skills/overlay-studio-editor/SKILL.md)。测试期间可将该技能文件夹单独压缩为 ZIP 后导入。
 
 1. 先安装并启动本地工作台。
 2. 在支持的客户端导入 Skill；WorkBuddy 可使用其技能管理界面的本地技能包上传入口，具体名称以所用版本为准。
