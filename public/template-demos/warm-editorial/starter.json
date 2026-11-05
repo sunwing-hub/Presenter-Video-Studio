@@ -1,0 +1,232 @@
+{
+  "format": "presenter-template-starter",
+  "version": 1,
+  "templateId": "team.warm-editorial",
+  "templateVersion": "0.1.0",
+  "project": {
+    "version": 7,
+    "canvas": {
+      "width": 1080,
+      "height": 1920,
+      "aspectRatio": "9/16"
+    },
+    "duration": 16,
+    "videoDuration": 16,
+    "videoMuted": true,
+    "sourceAudioMode": "mute",
+    "videoVolume": 100,
+    "presenter": {
+      "mode": "full",
+      "x": 50,
+      "y": 35,
+      "zoom": 1,
+      "size": 24
+    },
+    "layouts": [],
+    "cues": [],
+    "captionStyle": {
+      "enabled": false,
+      "fontFamily": "sans-serif",
+      "fontSize": 44,
+      "color": "#ffffff",
+      "bottom": 8,
+      "strokeWidth": 4
+    },
+    "audioClips": [
+      {
+        "id": "demo-clock",
+        "mediaId": "b80ef2e8-f515-47c9-9463-45cc86495a90",
+        "name": "静音演示时钟",
+        "track": "music",
+        "start": 0,
+        "end": 16,
+        "offset": 0,
+        "volume": 1,
+        "loop": false,
+        "fadeIn": 0,
+        "fadeOut": 0
+      }
+    ],
+    "canvasLayers": [
+      {
+        "id": "demo-story",
+        "type": "card",
+        "sceneId": "team-story",
+        "story": {
+          "format": "team-story",
+          "version": 1,
+          "platform": "douyin",
+          "duration": 16,
+          "audio": {
+            "id": "b80ef2e8-f515-47c9-9463-45cc86495a90",
+            "name": "静音演示时钟"
+          },
+          "fontFamily": "\"PingFang SC\",\"Microsoft YaHei\",sans-serif",
+          "highlightLexicon": [
+            "观点",
+            "关系",
+            "证据",
+            "结论"
+          ],
+          "provenance": {
+            "purpose": "公开通用模板演示",
+            "assets": "原创代码插画及示例资料，不含私人媒体或学习原片",
+            "timing": "人工编排的静音展示时间，不冒充逐词口播对齐"
+          },
+          "template": "team.warm-editorial@0.1.0",
+          "presentationStyle": "warm-editorial",
+          "editorialHeader": "数字表达 / DEMO",
+          "video": {
+            "id": "de6dc4db-41cb-476c-b5b1-052175d54d7c",
+            "name": "虚构示意人物"
+          },
+          "scenes": [
+            {
+              "id": "S0",
+              "kind": "board",
+              "start": 0,
+              "end": 4,
+              "title": "用数字\n打开一个问题",
+              "labels": [],
+              "theme": "light",
+              "presenter": "hero",
+              "transition": "window",
+              "events": [],
+              "beats": [
+                0.25,
+                0.7,
+                1.15,
+                1.6
+              ],
+              "narrativeKind": "opening",
+              "editorial": {
+                "value": "3",
+                "unit": "步",
+                "label": "把信息讲成重点",
+                "question": "你的重点是什么？",
+                "detail": "数字、卡片与人物协同呈现"
+              }
+            },
+            {
+              "id": "S4",
+              "kind": "board",
+              "start": 4,
+              "end": 8,
+              "title": "不是堆数字\n是讲清楚关系",
+              "labels": [],
+              "theme": "light",
+              "presenter": "pip",
+              "transition": "window",
+              "events": [],
+              "beats": [
+                4.25,
+                4.7,
+                5.15,
+                5.6
+              ],
+              "narrativeKind": "metric-steps",
+              "editorial": {
+                "value": "3",
+                "label": "把数字放回语境",
+                "step1": "说清范围",
+                "step2": "展示关系",
+                "step3": "落到结论",
+                "stepDetail": "按理解顺序逐项出现",
+                "annotation": "示例数据",
+                "source": "通用模板演示",
+                "note": "可替换为自己的真实材料"
+              }
+            },
+            {
+              "id": "S8",
+              "kind": "board",
+              "start": 8,
+              "end": 12,
+              "title": "用对比\n让信息更直观",
+              "labels": [],
+              "theme": "light",
+              "presenter": "pip",
+              "transition": "window",
+              "events": [],
+              "beats": [
+                8.25,
+                8.7,
+                9.15,
+                9.6
+              ],
+              "narrativeKind": "comparison",
+              "editorial": {
+                "sample": "表达方式对比",
+                "sampleDetail": "仅作版式演示",
+                "leftValue": "01",
+                "rightValue": "03",
+                "leftLabel": "一个重点",
+                "rightLabel": "三层展开",
+                "annotation": "有结构的表达",
+                "source": "通用演示，非业务指标",
+                "note": "保留口径，再突出重点"
+              }
+            },
+            {
+              "id": "S12",
+              "kind": "board",
+              "start": 12,
+              "end": 16,
+              "title": "把数字\n讲成可理解的观点",
+              "labels": [],
+              "theme": "light",
+              "presenter": "hero",
+              "transition": "window",
+              "events": [],
+              "beats": [
+                12.25,
+                12.7,
+                13.15,
+                13.6
+              ],
+              "narrativeKind": "closing",
+              "editorial": {
+                "title": "让重点被看见",
+                "detail": "从开场、论据到结论，保持同一种风格"
+              }
+            }
+          ],
+          "cues": []
+        },
+        "start": 0,
+        "end": 16,
+        "x": 0,
+        "y": 0,
+        "width": 1080,
+        "height": 1920,
+        "fontSize": 48,
+        "zIndex": 1,
+        "visible": true
+      }
+    ],
+    "partTransforms": {},
+    "partTextOverrides": {},
+    "draftMedia": {
+      "video": {
+        "id": "de6dc4db-41cb-476c-b5b1-052175d54d7c",
+        "mime": "video/mp4",
+        "type": "video",
+        "name": "虚构示意人物",
+        "url": "/__studio/media/de6dc4db-41cb-476c-b5b1-052175d54d7c",
+        "hash": "66fb7172e4657e0bd0de2082c0e227ec6f21bd49ec6dc4d8a5bc688bcb252075"
+      }
+    }
+  },
+  "bindings": {
+    "de6dc4db-41cb-476c-b5b1-052175d54d7c": {
+      "url": "/template-demos/shared/presenter.mp4",
+      "mime": "video/mp4",
+      "name": "虚构示意人物"
+    },
+    "b80ef2e8-f515-47c9-9463-45cc86495a90": {
+      "url": "/template-demos/shared/clock.flac",
+      "mime": "audio/flac",
+      "name": "静音演示时钟"
+    }
+  }
+}

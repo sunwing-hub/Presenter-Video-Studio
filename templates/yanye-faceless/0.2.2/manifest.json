@@ -13,7 +13,7 @@
   "controls": "controls.json",
   "recipe": "recipe.json",
   "AIenabled": false,
-  "previewUrl": "/reference-templates/yanye-faceless/index.html",
+  "previewUrl": "/?templateLab&template=team.yanye-faceless&version=0.2.2",
   "motionVersion": 2,
   "legacyRenderer": "src/templates/story/FacelessSceneV1.tsx",
   "revisionNotes": [
@@ -26,5 +26,42 @@
   ],
   "compatibility": "0.2.0 工程无需改动即可复现",
   "distributionNote": "仅包含制作模板与参数规范；本地研究、参考原片和历史草稿不分发。",
-  "releaseChannel": "production"
+  "releaseChannel": "production",
+  "showcase": {
+    "video": "/template-demos/knowledge-explainer/preview.mp4",
+    "poster": "/template-demos/knowledge-explainer/poster.jpg",
+    "theme": "light",
+    "eyebrow": "方法 + 图解",
+    "summary": "从一个重点开始，用图形的递进把方法讲到能用。",
+    "tags": [
+      "知识方法",
+      "整屏图解",
+      "无露脸"
+    ],
+    "shots": [
+      {
+        "label": "观点聚焦",
+        "time": 0
+      },
+      {
+        "label": "步骤拆解",
+        "time": 4
+      },
+      {
+        "label": "层级递进",
+        "time": 8
+      },
+      {
+        "label": "总结收束",
+        "time": 12
+      }
+    ],
+    "features": [
+      "标题、节点与说明依次接力",
+      "绿色重点卡与黄色聚焦标记",
+      "适合课程、方法和知识讲解"
+    ]
+  },
+  "starterProject": "/template-demos/knowledge-explainer/starter.json",
+  "coverUrl": "/template-demos/knowledge-explainer/poster.jpg"
 }

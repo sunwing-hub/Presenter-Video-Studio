@@ -12,7 +12,7 @@
     "dark-tech"
   ],
   "verifiedCanvas": "9/16",
-  "previewUrl": "/reference-templates/scene-narration/native.html",
+  "previewUrl": "/?templateLab&template=team.scene-narration&version=0.2.1-native",
   "revisionNotes": [
     "access/skills/workflow/proactive/communication/model/opinion 版式文案改由 scene.labels 驱动，labels 缺省回落旧文案，历史工程复现不变",
     "新增 evidence 证据版式：scene.evidenceMediaId 本地图片大卡（真实界面证据用，不生成假 Logo/假录屏）",
@@ -21,5 +21,42 @@
   ],
   "compatibility": "0.2.0-native 工程无需改动即可在 0.2.1 渲染器下复现",
   "distributionNote": "仅包含制作模板与参数规范；本地研究、参考原片和历史草稿不分发。",
-  "releaseChannel": "production"
+  "releaseChannel": "production",
+  "showcase": {
+    "video": "/template-demos/scene-narration/preview.mp4",
+    "poster": "/template-demos/scene-narration/poster.jpg",
+    "theme": "dark",
+    "eyebrow": "真人 + 场景",
+    "summary": "让观点、人物和真实依据，在同一个画面里协同表达。",
+    "tags": [
+      "真人口播",
+      "证据截图",
+      "深色科技"
+    ],
+    "shots": [
+      {
+        "label": "人物开场",
+        "time": 0
+      },
+      {
+        "label": "流程关系",
+        "time": 4
+      },
+      {
+        "label": "证据画面",
+        "time": 8
+      },
+      {
+        "label": "观点收束",
+        "time": 12
+      }
+    ],
+    "features": [
+      "人物中景与圆窗连续切换",
+      "截图、标注与关系逐步出现",
+      "适合科技、产品及案例解读"
+    ]
+  },
+  "starterProject": "/template-demos/scene-narration/starter.json",
+  "coverUrl": "/template-demos/scene-narration/poster.jpg"
 }

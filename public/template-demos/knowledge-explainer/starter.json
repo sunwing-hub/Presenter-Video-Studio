@@ -1,0 +1,205 @@
+{
+  "format": "presenter-template-starter",
+  "version": 1,
+  "templateId": "team.yanye-faceless",
+  "templateVersion": "0.2.2",
+  "project": {
+    "version": 7,
+    "canvas": {
+      "width": 1080,
+      "height": 1920,
+      "aspectRatio": "9/16"
+    },
+    "duration": 16,
+    "videoDuration": 16,
+    "videoMuted": true,
+    "sourceAudioMode": "mute",
+    "videoVolume": 100,
+    "presenter": {
+      "mode": "full",
+      "x": 50,
+      "y": 35,
+      "zoom": 1,
+      "size": 24
+    },
+    "layouts": [],
+    "cues": [],
+    "captionStyle": {
+      "enabled": false,
+      "fontFamily": "sans-serif",
+      "fontSize": 44,
+      "color": "#ffffff",
+      "bottom": 8,
+      "strokeWidth": 4
+    },
+    "audioClips": [
+      {
+        "id": "demo-clock",
+        "mediaId": "b80ef2e8-f515-47c9-9463-45cc86495a90",
+        "name": "静音演示时钟",
+        "track": "music",
+        "start": 0,
+        "end": 16,
+        "offset": 0,
+        "volume": 1,
+        "loop": false,
+        "fadeIn": 0,
+        "fadeOut": 0
+      }
+    ],
+    "canvasLayers": [
+      {
+        "id": "demo-story",
+        "type": "card",
+        "sceneId": "team-story",
+        "story": {
+          "format": "team-story",
+          "version": 1,
+          "platform": "douyin",
+          "duration": 16,
+          "audio": {
+            "id": "b80ef2e8-f515-47c9-9463-45cc86495a90",
+            "name": "静音演示时钟"
+          },
+          "fontFamily": "\"PingFang SC\",\"Microsoft YaHei\",sans-serif",
+          "highlightLexicon": [
+            "观点",
+            "关系",
+            "证据",
+            "结论"
+          ],
+          "provenance": {
+            "purpose": "公开通用模板演示",
+            "assets": "原创代码插画及示例资料，不含私人媒体或学习原片",
+            "timing": "人工编排的静音展示时间，不冒充逐词口播对齐"
+          },
+          "template": "team.yanye-faceless@0.2.2",
+          "visualTheme": "white-flow",
+          "presenterMode": "none",
+          "motionVersion": 2,
+          "scenes": [
+            {
+              "id": "S0",
+              "kind": "board",
+              "start": 0,
+              "end": 4,
+              "title": "把方法\n讲成可读的画面",
+              "labels": [
+                "方法不止是文字",
+                "让关系看得见"
+              ],
+              "theme": "light",
+              "presenter": "none",
+              "transition": "window",
+              "events": [],
+              "beats": [
+                0.25,
+                0.7,
+                1.15,
+                1.6
+              ],
+              "diagram": "focus"
+            },
+            {
+              "id": "S4",
+              "kind": "board",
+              "start": 4,
+              "end": 8,
+              "title": "把一个方法\n拆成三个步骤",
+              "labels": [
+                "明确问题",
+                "组织关系",
+                "形成行动",
+                "先知道要解决什么",
+                "让节点按顺序连接",
+                "把理解落到具体一步",
+                "从知道，到会用"
+              ],
+              "theme": "light",
+              "presenter": "none",
+              "transition": "window",
+              "events": [],
+              "beats": [
+                4.25,
+                4.7,
+                5.15,
+                5.6
+              ],
+              "diagram": "toolbox"
+            },
+            {
+              "id": "S8",
+              "kind": "board",
+              "start": 8,
+              "end": 12,
+              "title": "从一段文字\n到清楚的结构",
+              "labels": [
+                "先给结论",
+                "再讲依据",
+                "最后给行动",
+                "让观众知道重点",
+                "把复杂关系展开",
+                "每一步都能接着做"
+              ],
+              "theme": "light",
+              "presenter": "none",
+              "transition": "window",
+              "events": [],
+              "beats": [
+                8.25,
+                8.7,
+                9.15,
+                9.6
+              ],
+              "diagram": "problems"
+            },
+            {
+              "id": "S12",
+              "kind": "board",
+              "start": 12,
+              "end": 16,
+              "title": "讲解的终点\n是让人能用起来",
+              "labels": [
+                "让方法不止停在纸上",
+                "把复杂讲清楚",
+                "把方法用起来",
+                "观点、关系与行动，连成一条线"
+              ],
+              "theme": "light",
+              "presenter": "none",
+              "transition": "window",
+              "events": [],
+              "beats": [
+                12.25,
+                12.7,
+                13.15,
+                13.6
+              ],
+              "diagram": "summary"
+            }
+          ],
+          "cues": []
+        },
+        "start": 0,
+        "end": 16,
+        "x": 0,
+        "y": 0,
+        "width": 1080,
+        "height": 1920,
+        "fontSize": 48,
+        "zIndex": 1,
+        "visible": true
+      }
+    ],
+    "partTransforms": {},
+    "partTextOverrides": {},
+    "draftMedia": {}
+  },
+  "bindings": {
+    "b80ef2e8-f515-47c9-9463-45cc86495a90": {
+      "url": "/template-demos/shared/clock.flac",
+      "mime": "audio/flac",
+      "name": "静音演示时钟"
+    }
+  }
+}

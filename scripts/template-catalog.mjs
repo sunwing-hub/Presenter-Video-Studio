@@ -68,6 +68,8 @@ function buildEntry(manifestPath, refLibrary) {
   return {
     id: manifest.id,
     releaseChannel: manifest.releaseChannel || 'development',
+    showcase: manifest.showcase || null,
+    starterProject: manifest.starterProject || null,
     version: manifest.version,
     name: manifest.name,
     category,

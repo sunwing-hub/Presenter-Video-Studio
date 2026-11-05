@@ -1,6 +1,6 @@
 {
   "schema": "overlay-studio/template-catalog@1",
-  "generatedAt": "2026-11-04T16:49:03.973Z",
+  "generatedAt": "2026-11-05T08:10:25.127Z",
   "generator": "scripts/template-catalog.mjs",
   "sourceOfTruth": "templates/*/*/manifest.json（本文件为派生汇总，请勿手工编辑；改模板后重新生成）",
   "workbenchRoot": ".",
@@ -16,7 +16,7 @@
       "kind": "native-template",
       "description": "真实截图与流程关系配合，连续人物窗口与证据重点标注。",
       "previewUrl": "/reference-templates/scene-narration/native.html",
-      "coverUrl": "/reference-templates/scene-narration/cover.svg"
+      "coverUrl": "/template-demos/scene-narration/poster.jpg"
     },
     {
       "id": "team.warm-editorial",
@@ -24,7 +24,7 @@
       "kind": "native-template",
       "description": "暖纸底色、砖红数字、绿色卡片与连续人物窗口。",
       "previewUrl": "/reference-templates/warm-editorial/index.html",
-      "coverUrl": "/reference-templates/warm-editorial/cover.svg"
+      "coverUrl": "/template-demos/warm-editorial/poster.jpg"
     },
     {
       "id": "team.yanye-faceless",
@@ -32,13 +32,49 @@
       "kind": "native-template",
       "description": "列表、步骤和节点接力；原声驱动，可选人物圆窗。",
       "previewUrl": "/reference-templates/yanye-faceless/index.html",
-      "coverUrl": "/reference-templates/yanye-faceless/cover.svg"
+      "coverUrl": "/template-demos/knowledge-explainer/poster.jpg"
     }
   ],
   "templates": [
     {
       "id": "team.scene-narration",
       "releaseChannel": "production",
+      "showcase": {
+        "video": "/template-demos/scene-narration/preview.mp4",
+        "poster": "/template-demos/scene-narration/poster.jpg",
+        "theme": "dark",
+        "eyebrow": "真人 + 场景",
+        "summary": "让观点、人物和真实依据，在同一个画面里协同表达。",
+        "tags": [
+          "真人口播",
+          "证据截图",
+          "深色科技"
+        ],
+        "shots": [
+          {
+            "label": "人物开场",
+            "time": 0
+          },
+          {
+            "label": "流程关系",
+            "time": 4
+          },
+          {
+            "label": "证据画面",
+            "time": 8
+          },
+          {
+            "label": "观点收束",
+            "time": 12
+          }
+        ],
+        "features": [
+          "人物中景与圆窗连续切换",
+          "截图、标注与关系逐步出现",
+          "适合科技、产品及案例解读"
+        ]
+      },
+      "starterProject": "/template-demos/scene-narration/starter.json",
       "version": "0.2.1-native",
       "name": "场景叙事口播",
       "category": "native-template",
@@ -77,8 +113,8 @@
       "assets": {
         "exampleProject": null,
         "deliveryVideo": null,
-        "previewUrl": "/reference-templates/scene-narration/native.html",
-        "coverUrl": "/reference-templates/scene-narration/cover.svg",
+        "previewUrl": "/?templateLab&template=team.scene-narration&version=0.2.1-native",
+        "coverUrl": "/template-demos/scene-narration/poster.jpg",
         "sourceAsset": null,
         "sourceSha256": null
       },
@@ -101,6 +137,42 @@
     {
       "id": "team.warm-editorial",
       "releaseChannel": "production",
+      "showcase": {
+        "video": "/template-demos/warm-editorial/preview.mp4",
+        "poster": "/template-demos/warm-editorial/poster.jpg",
+        "theme": "paper",
+        "eyebrow": "数字 + 观点",
+        "summary": "让数字先抓住注意，再用卡片和对比把意思讲清。",
+        "tags": [
+          "数字解读",
+          "暖纸质感",
+          "人物圆窗"
+        ],
+        "shots": [
+          {
+            "label": "数字开场",
+            "time": 0
+          },
+          {
+            "label": "步骤展开",
+            "time": 4
+          },
+          {
+            "label": "数据对比",
+            "time": 8
+          },
+          {
+            "label": "结论收束",
+            "time": 12
+          }
+        ],
+        "features": [
+          "大数字按节拍错峰进入",
+          "暖纸底色与砖红、深绿层级",
+          "适合商业观点与数据解读"
+        ]
+      },
+      "starterProject": "/template-demos/warm-editorial/starter.json",
       "version": "0.1.0",
       "name": "暖纸数字口播",
       "category": "native-template",
@@ -139,8 +211,8 @@
       "assets": {
         "exampleProject": null,
         "deliveryVideo": null,
-        "previewUrl": "/reference-templates/warm-editorial/index.html",
-        "coverUrl": "/reference-templates/warm-editorial/cover.svg",
+        "previewUrl": "/?templateLab&template=team.warm-editorial&version=0.1.0",
+        "coverUrl": "/template-demos/warm-editorial/poster.jpg",
         "sourceAsset": null,
         "sourceSha256": null
       },
@@ -163,6 +235,42 @@
     {
       "id": "team.yanye-faceless",
       "releaseChannel": "production",
+      "showcase": {
+        "video": "/template-demos/knowledge-explainer/preview.mp4",
+        "poster": "/template-demos/knowledge-explainer/poster.jpg",
+        "theme": "light",
+        "eyebrow": "方法 + 图解",
+        "summary": "从一个重点开始，用图形的递进把方法讲到能用。",
+        "tags": [
+          "知识方法",
+          "整屏图解",
+          "无露脸"
+        ],
+        "shots": [
+          {
+            "label": "观点聚焦",
+            "time": 0
+          },
+          {
+            "label": "步骤拆解",
+            "time": 4
+          },
+          {
+            "label": "层级递进",
+            "time": 8
+          },
+          {
+            "label": "总结收束",
+            "time": 12
+          }
+        ],
+        "features": [
+          "标题、节点与说明依次接力",
+          "绿色重点卡与黄色聚焦标记",
+          "适合课程、方法和知识讲解"
+        ]
+      },
+      "starterProject": "/template-demos/knowledge-explainer/starter.json",
       "version": "0.2.2",
       "name": "知识付费讲解",
       "category": "native-template",
@@ -201,8 +309,8 @@
       "assets": {
         "exampleProject": null,
         "deliveryVideo": null,
-        "previewUrl": "/reference-templates/yanye-faceless/index.html",
-        "coverUrl": "/reference-templates/yanye-faceless/cover.svg",
+        "previewUrl": "/?templateLab&template=team.yanye-faceless&version=0.2.2",
+        "coverUrl": "/template-demos/knowledge-explainer/poster.jpg",
         "sourceAsset": null,
         "sourceSha256": null
       },
