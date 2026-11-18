@@ -7,7 +7,7 @@ version=sys.argv[1] if len(sys.argv)>1 else ''
 if len(sys.argv)<3 or not re.fullmatch(r'[0-9][A-Za-z0-9.-]{1,40}',version):raise SystemExit('Usage: python3 scripts/package-release.py VERSION OUT_DIR')
 out=Path(sys.argv[2]).resolve();out.mkdir(parents=True,exist_ok=True)
 blocked={'.git','node_modules','dist','media','drafts','exports','output','user-data','user-templates','.venv','__pycache__'}
-roots=['src','scripts','templates','public','tests','skills','docs'];paths=[]
+roots=['.github','src','scripts','templates','public','tests','skills','docs'];paths=[]
 for name in roots:
  for p in (root/name).rglob('*'):
   rel=p.relative_to(root)
@@ -19,6 +19,8 @@ for name in roots:
   paths.append(p)
 for p in root.iterdir():
  if p.is_file() and p.name not in ['文件清单.json','.DS_Store'] and (p.suffix in ['.md','.json','.yaml','.html','.command','.cmd','.ts'] or p.name=='.gitignore'):paths.append(p)
+for p in root.glob('*.command'):
+ if not p.read_bytes().startswith(b'#!/'):raise SystemExit('Invalid macOS launcher: '+p.name)
 files=[]
 for p in sorted(set(paths)):
  rel=p.relative_to(root).as_posix();data=p.read_bytes()
@@ -26,7 +28,7 @@ for p in sorted(set(paths)):
   text=data.decode('utf8')
   if re.search(r'/(?:Users|home)/[A-Za-z0-9_.-]+/|gh[pousr]_[A-Za-z0-9]{30,}|sk-[A-Za-z0-9_-]{24,}|-----BEGIN (?:RSA |OPENSSH )?PRIVATE KEY-----',text):raise SystemExit('Review sensitive content: '+rel)
  files.append({'path':rel,'sha256':hashlib.sha256(data).hexdigest(),'bytes':len(data)})
-manifest=root/'文件清单.json';manifest.write_text(json.dumps({'version':version,'files':files},ensure_ascii=False,indent=2))
+manifest=root/'文件清单.json';manifest.write_text(json.dumps({'version':version,'releaseStatus':'testing','files':files},ensure_ascii=False,indent=2))
 archive=out/f'Presenter-Video-Studio-{version}.zip';skill=out/f'overlay-studio-editor-skill-{version}.zip'
 with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
  for f in files:z.write(root/f['path'],f'Presenter-Video-Studio-{version}/'+f['path'])

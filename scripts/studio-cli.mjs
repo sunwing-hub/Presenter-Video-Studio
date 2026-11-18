@@ -119,9 +119,9 @@ function openProject(p) {
   const missing = new Set()
   const refs = new Set()
   const walk = (node, depth) => {
-    if (!node || typeof node !== 'object' || depth > 6) return
+    if (!node || depth > 6) return
     if (typeof node === 'string') {
-      const m = node.match(/^\/(Users|Volumes)\/.+\.(mp4|mov|wav|mp3|png|jpg|jpeg|webm|m4a|srt)$/i)
+      const m = node.match(/^(?:\/|[A-Za-z]:[\\/]).+\.(mp4|mov|wav|mp3|png|jpg|jpeg|webm|m4a|srt)$/i)
       if (m) refs.add(node)
       return
     }
@@ -147,4 +147,4 @@ switch (cmd) {
 }
 const out = JSON.stringify(result, null, 2)
 process.stdout.write(out + '\n')
-if (result && result.error) process.exit(1)
+if (result && (result.error || result.overall === 'incomplete')) process.exitCode = 1

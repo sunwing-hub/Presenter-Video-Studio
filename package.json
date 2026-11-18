@@ -1,7 +1,7 @@
 {
   "name": "presenter-video-studio",
   "private": true,
-  "version": "2026.11.5-2",
+  "version": "2026.11.18-1",
   "type": "module",
   "scripts": {
     "test": "node scripts/run-tests.mjs",
@@ -11,7 +11,10 @@
     "preview": "vite preview",
     "start": "node scripts/studio-launcher.mjs",
     "setup": "node scripts/studio-launcher.mjs --install",
-    "doctor": "node scripts/studio-launcher.mjs --doctor"
+    "doctor": "node scripts/studio-launcher.mjs --doctor",
+    "service:start": "node scripts/studio-service.mjs start",
+    "service:status": "node scripts/studio-service.mjs status",
+    "service:stop": "node scripts/studio-service.mjs stop"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

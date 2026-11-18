@@ -1,0 +1,39 @@
+name: WorkBuddy test build
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install locked dependencies
+        run: npm exec --yes --package=pnpm@11.25.0 -- pnpm install --frozen-lockfile
+      - name: Install rendering browser
+        run: node node_modules/playwright/cli.js install --with-deps chromium
+      - run: npm test
+      - run: npm run build
+      - run: npm run doctor
+      - name: Exercise background service
+        run: node tests/studio-service-smoke.mjs
+      - name: Package test archives
+        if: runner.os == 'Linux'
+        run: python3 scripts/package-release.py 2026.11.18-workbuddy-test artifacts
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Linux'
+        with:
+          name: Presenter-Video-Studio-workbuddy-test
+          path: artifacts/*
+          retention-days: 30

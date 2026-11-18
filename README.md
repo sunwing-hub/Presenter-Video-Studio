@@ -1,12 +1,14 @@
 # Presenter Video Studio · 剪辑工作台与知识讲解模板中心
 
-> **测试中，尚非正式版。** 当前不提供正式 GitHub Release。测试时请使用 Code → Download ZIP 获取源码，解压后按说明安装。文中的版本号用于区分测试构建，不代表正式验收；独立安装包与 Skill 包仍保留在作者本地。
+> **测试中，尚非正式版。** 当前不提供正式 GitHub Release。测试时请使用 Code → Download ZIP 获取源码，解压后按说明安装。文中的版本号用于区分测试构建，不代表正式验收；可直接下载下方源码包和独立 Skill 包。
 
 本地运行的 AI 辅助视频制作工具，包含可编辑剪辑工作台、模板中心与可独立导入的 Skill。支持 WorkBuddy、Codex 等具备本地文件和命令执行能力的桌面助手接入。AI 组织内容与编排，工作台保存工程、预览并原生导出。
 
-## 当前测试构建：2026.11.5-r2
+## 当前测试构建：2026.11.18-workbuddy-test
 
-新增首次默认/自定标准选择和持久保存；用户自建模板与动态模板发现；可重复发布打包工具。四项核验见 [核验记录](docs/四项逻辑核验.md)。
+[下载完整工作台 ZIP](https://github.com/sunwing-hub/Presenter-Video-Studio/archive/refs/heads/main.zip) · [下载 Skill ZIP](downloads/overlay-studio-editor-skill.zip) · [WorkBuddy 完整接入说明](docs/WorkBuddy接入.md)
+
+修复 macOS 安装入口损坏及启动端口不一致；安装锁定指定 pnpm 版本。新增后台启停、实例身份与连接记录、从模板建立草稿及保存修订的助手命令，避免服务随终端退出、连错安装目录。源码 ZIP 完整解压后即可安装，无需云端部署或额外 MCP。后台服务需在重启后重新启动。
 
 原有工作台能力：
 
@@ -49,14 +51,15 @@
 
 ```sh
 npm run setup
-npm start
+npm run service:start
+npm run service:status
 ```
 
-默认地址为 `http://127.0.0.1:5173`；模板中心为 `/?templateLab`，全片工作台为 `/?storyLab`。端口被占用时可设置 `OVERLAY_STUDIO_PORT`。程序仅监听本机，不能直接作为多用户云端部署。
+后台启动后无需保留终端，停止用 `npm run service:stop`；也可双击启动入口前台运行。实际地址以命令输出为准，默认 `http://127.0.0.1:5173`；模板中心为 `/?templateLab`，全片工作台为 `/?storyLab`。端口被占用时可设置 `OVERLAY_STUDIO_PORT`。程序仅监听本机，不能直接作为多用户云端部署。
 
 ## WorkBuddy 与 Codex
 
-独立技能目录：[`skills/overlay-studio-editor`](skills/overlay-studio-editor/SKILL.md)。测试期间可将该技能文件夹单独压缩为 ZIP 后导入。
+独立技能目录：[`skills/overlay-studio-editor`](skills/overlay-studio-editor/SKILL.md)。也可直接下载上方 Skill ZIP 后导入。
 
 1. 先安装并启动本地工作台。
 2. 在支持的客户端导入 Skill；WorkBuddy 可使用其技能管理界面的本地技能包上传入口，具体名称以所用版本为准。
@@ -74,13 +77,14 @@ npm start
 ## 助手调用入口
 
 ```sh
+node scripts/studio-service.mjs status
 node scripts/studio-cli.mjs env-check
 node scripts/studio-cli.mjs list-templates --json
 node scripts/studio-cli.mjs read-spec team.scene-narration --version 0.2.1-native --json
 node scripts/render-studio-project.mjs 工程.json 新成片.mp4 --validate-only
 ```
 
-前三项为检查与读取规范，不是“一键自动剪片”。正式导出前保存原生工程、绑定真实本地素材，并指定正确的 `STUDIO_ORIGIN`。技能要求工程、预览和导出都由工作台承载。
+前四项为检查与读取规范，不是“一键自动剪片”。正式导出前保存原生工程、绑定真实本地素材，并指定正确的 `STUDIO_ORIGIN`。技能要求工程、预览和导出都由工作台承载。
 
 ## 发布内容与数据
 

@@ -31,7 +31,7 @@ node scripts/studio-cli.mjs read-spec team.scene-narration --version 0.2.1-nativ
 
 第三条仅为模板查询示例，实际按用户题材选择。当前CLI仅提供只读检查与目录/规范/工程读取，不存在“一键自动制作”命令。使用现有素材、草稿、生成与导出接口时，先读对应脚本，不猜测接口参数；完整原生工程导出使用scripts/render-studio-project.mjs。通过STUDIO_ORIGIN指定本次运行地址。
 
-需要安装时读取工作台的 docs/安装升级与配置.md。缺少依赖先报告并在授权范围安装；不要调用作者的Python路径、凭证或付费账号。选定模板后固定版本和输入指纹。学习参考不可当作可直接导出的原生模板。
+安装、后台启动、工作台身份核对、模板建工程与草稿保存，读取工作台的 docs/WorkBuddy接入.md。使用 `node scripts/studio-service.mjs start` 保持后台运行并读取 JSON 地址；只有 state=ready 且 root 对应该安装目录才继续。连接记录会被同目录的工程/导出入口读取。`scripts/studio-project.mjs new` 创建工作台示例草稿，`save` 将修改写回工作台；必须替换示例内容，落实个人标准并预览，不把示例当本期成片。需要安装时读取工作台的 docs/安装升级与配置.md。缺少依赖先报告并在授权范围安装；不要调用作者的Python路径、凭证或付费账号。选定模板后固定版本和输入指纹。学习参考不可当作可直接导出的原生模板。
 
 ## 执行
 

@@ -1,8 +1,9 @@
 #!/usr/bin/env node
+import {inspectStudio} from './studio-connection.mjs'
 import {readPreferences,savePreferences} from './preferences.mjs'
 import {createInterface} from 'node:readline/promises'
 import {spawn} from 'node:child_process'
-import {access,readFile,mkdir} from 'node:fs/promises'
+import {access,readFile,mkdir,copyFile,rename,chmod} from 'node:fs/promises'
 import {resolve,dirname,join} from 'node:path'
 import {fileURLToPath} from 'node:url'
 import {once} from 'node:events'
@@ -36,14 +37,23 @@ async function install(){
   }finally{ui.close()}
  }
 
+ const suppliedFfmpeg=process.env.FFMPEG_BIN?resolve(process.env.FFMPEG_BIN):null
+ if(suppliedFfmpeg){
+  await run(suppliedFfmpeg,['-version'],{stdio:'ignore'})
+  process.env.FFMPEG_BIN=suppliedFfmpeg
+  console.log('使用用户指定且已验证的 FFmpeg，跳过二进制下载。')
+ }
  console.log('首次安装需要联网：正在安装锁定版本的项目依赖…')
  // The package ships a pnpm lockfile. Use the same pnpm release even when
  // the recipient has only the standard Node.js + npm installation.
  const pinned=packageManager.packageManager??'pnpm@11.25.0'
- let globalPnpm=false
- try{await run(windows?'pnpm.cmd':'pnpm',['--version'],{stdio:'ignore',shell:windows});globalPnpm=true}catch{}
- if(globalPnpm)await run(windows?'pnpm.cmd':'pnpm',['install','--frozen-lockfile'],{shell:windows})
- else await run(windows?'npm.cmd':'npm',['exec','--yes',`--package=${pinned}`,'--','pnpm','install','--frozen-lockfile'],{shell:windows})
+ await run(windows?'npm.cmd':'npm',['exec','--yes',`--package=${pinned}`,'--','pnpm','install','--frozen-lockfile'],{shell:windows})
+ if(suppliedFfmpeg){
+  const destination=join(root,'node_modules/ffmpeg-static',windows?'ffmpeg.exe':'ffmpeg')
+  await copyFile(suppliedFfmpeg,destination+'.tmp')
+  if(!windows)await chmod(destination+'.tmp',0o755)
+  await rename(destination+'.tmp',destination)
+ }
  const ffmpeg=(await import('ffmpeg-static')).default
  if(!ffmpeg||!await exists(ffmpeg))await node(['node_modules/ffmpeg-static/install.js'])
  console.log('正在安装导出视频使用的 Chromium…')
@@ -76,16 +86,15 @@ function openBrowser(url){
  const child=spawn(command,argv,{detached:true,stdio:'ignore'})
  child.once('error',()=>console.log(`请手动打开 ${url}`));child.unref()
 }
-async function ready(url){
- try{const response=await fetch(`${url}__studio/drafts`,{signal:AbortSignal.timeout(1000)});return response.ok&&Array.isArray(await response.json())}catch{return false}
-}
 async function start(){
  await node(['scripts/template-catalog.mjs'])
  if(!await exists(join(root,'node_modules/vite/bin/vite.js')))throw Error('请先运行安装工作台。')
  const port=Number(process.env.OVERLAY_STUDIO_PORT||5173)
  if(!Number.isInteger(port)||port<1024||port>65535)throw Error('OVERLAY_STUDIO_PORT 需要是 1024–65535 的端口。')
  const url=`http://127.0.0.1:${port}/`
- if(await ready(url)){console.log(`已有工作台在运行：${url}`);if(!args.has('--no-open'))openBrowser(url);return}
+ const existing=await inspectStudio(url.slice(0,-1))
+ if(existing.state==='foreign')throw Error(`端口 ${port} 属于其他工作台或程序，拒绝混用素材。请设置 OVERLAY_STUDIO_PORT 为其他空闲端口。`)
+ if(existing.state==='ready'){console.log(`已有工作台在运行：${url}`);if(!args.has('--no-open'))openBrowser(url);return}
  await Promise.all(['drafts','media','exports'].map(name=>mkdir(join(root,name),{recursive:true})))
  const child=spawn(process.execPath,['node_modules/vite/bin/vite.js','--host','127.0.0.1','--port',String(port),'--strictPort'],{cwd:root,stdio:'inherit'})
  const completion=once(child,'exit')
@@ -93,10 +102,16 @@ async function start(){
  let stopping=false
  const stop=()=>{if(!stopping){stopping=true;child.kill('SIGTERM')}}
  process.once('SIGINT',stop);process.once('SIGTERM',stop)
+ let started=false
  for(let n=0;n<60&&child.exitCode===null&&!stopping;n++){
-  if(await ready(url)){console.log(`\n工作台已启动：${url}\n使用期间保留本窗口。退出时按 Ctrl+C。`);if(!args.has('--no-open'))openBrowser(url);break}
+  if((await inspectStudio(url.slice(0,-1))).state==='ready'){
+   started=true;console.log(`\n工作台已启动：${url}\n使用期间保留本窗口。退出时按 Ctrl+C。`)
+   if(!args.has('--no-open'))openBrowser(url)
+   break
+  }
   await new Promise(resolve=>setTimeout(resolve,250))
  }
+ if(!started&&child.exitCode===null&&!stopping){stop();await completion;throw Error('工作台未能及时就绪，请检查启动日志。')}
  const [code,signal]=await completion
  if(code!==0&&!stopping)throw Error(`启动失败（${signal??code}）。若端口已被占用，请关闭原服务或设置 OVERLAY_STUDIO_PORT。`)
 }

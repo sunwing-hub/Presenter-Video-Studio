@@ -1,6 +1,12 @@
 {
-  "version": "2026.11.5-gallery-test",
+  "version": "2026.11.18-workbuddy-test",
+  "releaseStatus": "testing",
   "files": [
+    {
+      "path": ".github/workflows/test-build.yml",
+      "sha256": "ea6e1b58efbd54fe9a0328a966ac489e16fbc9d0068464e34af9ab9211a8df0b",
+      "bytes": 1195
+    },
     {
       "path": ".gitignore",
       "sha256": "81e534571415252eb1121516b7aab170d8a2a3deb757e8fd2373f7da2b62bb97",
@@ -8,18 +14,18 @@
     },
     {
       "path": "CHANGELOG.md",
-      "sha256": "798e92d3dcc1ebcd1b100a63b6ce74030cde791d1d891c9c5a942f14434ae7bc",
-      "bytes": 1402
+      "sha256": "afa2412ccdfa59833ffe252335c89d0196eb771b37ff730664971d5dacff714a",
+      "bytes": 2109
     },
     {
       "path": "README.md",
-      "sha256": "672712de903757be0757ae0fae70eb8c2993a64300b5fd79f422d42b06c02ebe",
-      "bytes": 7908
+      "sha256": "044ceac322c979bf7743b3ff1df51f04614694a4f5c195b38d6071de02e76c14",
+      "bytes": 8520
     },
     {
       "path": "RELEASE-VALIDATION.md",
-      "sha256": "7301f0cc52309ca35bc6a8f54b8c68833db78853667adf8d440a7e0b70c50123",
-      "bytes": 2279
+      "sha256": "1073369c98c63c7a58190165643dd09537ad27e3731ad9e139bf4a88089c1bd3",
+      "bytes": 4261
     },
     {
       "path": "THIRD-PARTY-NOTICES.md",
@@ -28,8 +34,8 @@
     },
     {
       "path": "docs/WorkBuddy接入.md",
-      "sha256": "f0306a0e470bd141c8d8b333ba42f419c2ed87b4682b1ed038ad21b5441bfedd",
-      "bytes": 1698
+      "sha256": "066f9d70837ab6314eed72549e81839c3b2a3f87a0a7b73ca5a5d50ec12f9e2a",
+      "bytes": 5751
     },
     {
       "path": "docs/images/template-center.png",
@@ -48,8 +54,8 @@
     },
     {
       "path": "docs/安装升级与配置.md",
-      "sha256": "7d3d26837bf8537245812bcae77653d3f9eb7620dcba1ba119c1d0453f1d3b15",
-      "bytes": 2188
+      "sha256": "a03d83936a6e76fd55a44f12f440f2a97cc66abe1d1da550104f457932256101",
+      "bytes": 3217
     },
     {
       "path": "docs/模板开发与迭代.md",
@@ -68,8 +74,8 @@
     },
     {
       "path": "package.json",
-      "sha256": "b67825494b1775cba117c4bdfe16efbf666dd504b5bff52107b0ed18d922eecb",
-      "bytes": 1002
+      "sha256": "9cb4f4270cd497e0ab31c57434a7ed27acf65d6f6e380a74846e01564335d549",
+      "bytes": 1189
     },
     {
       "path": "pnpm-lock.yaml",
@@ -283,8 +289,8 @@
     },
     {
       "path": "scripts/package-release.py",
-      "sha256": "278ee1961ddc1c2b585e711da0709dc6a3672b4ebbf3e72ee5cbaab0e0b4b45a",
-      "bytes": 2945
+      "sha256": "3a5f957a172a122f1e46e73ae0e5ab553d5b165e90d4d40646345ac19d558e02",
+      "bytes": 3108
     },
     {
       "path": "scripts/preferences.d.mts",
@@ -313,8 +319,8 @@
     },
     {
       "path": "scripts/render-studio-project.mjs",
-      "sha256": "47cadd36c59c51b91e20d819d1018b5ce907004dbbed5b3b6b4a348e4da02c13",
-      "bytes": 2647
+      "sha256": "496b8b034800c28ba2fdeeb726f2051618af729c87735673bc2afef9134dfb55",
+      "bytes": 2900
     },
     {
       "path": "scripts/render-template-lab.mjs",
@@ -328,8 +334,8 @@
     },
     {
       "path": "scripts/run-tests.mjs",
-      "sha256": "e8ea0db2396381d89e075cf6524c1a87a284574ccd140e328899f3c215e3ad38",
-      "bytes": 760
+      "sha256": "88043d6b8d0beaf22f25d19f95a965bdb645e9837471073f52ed4a631c7c6f97",
+      "bytes": 780
     },
     {
       "path": "scripts/runninghub-client.mjs",
@@ -358,18 +364,43 @@
     },
     {
       "path": "scripts/studio-cli.mjs",
-      "sha256": "980120b624e15c8d10722e54f48a3dcfd5292b466d8344f6da969085305ba3e4",
-      "bytes": 7607
+      "sha256": "e55432a09bcb1b23e4f422108f4a4651577d63033b15d8b6a3e6461910fa22aa",
+      "bytes": 7623
+    },
+    {
+      "path": "scripts/studio-connection.mjs",
+      "sha256": "62d22d019f73c72db442d46ad40d88b1c6cdd84193a2f1a5498c6445458e2f8c",
+      "bytes": 1094
+    },
+    {
+      "path": "scripts/studio-info-server.d.mts",
+      "sha256": "0efa54a050a8fadb2ff677d6f9f3ef226b46f6a59427c97fb013784b54de1011",
+      "bytes": 58
+    },
+    {
+      "path": "scripts/studio-info-server.mjs",
+      "sha256": "cd8098450bc7ae1556c10efcb04ad7800173ca726e619585dde520e7be5fb359",
+      "bytes": 915
     },
     {
       "path": "scripts/studio-launcher.mjs",
-      "sha256": "60086d584818f84c82412d698d73bade58ea95a4ed3d64e1944c45b53b742c1d",
-      "bytes": 6976
+      "sha256": "cd74ee5e913f7846516d4b9ca2a42397b7234af03f9f2e5a5405aac0781c0173",
+      "bytes": 7627
     },
     {
       "path": "scripts/studio-origin.mjs",
-      "sha256": "d8ab1c077e343a7e471651482beb412a773d7cd570a9e834b2aab8914d2c11a1",
-      "bytes": 411
+      "sha256": "fd2a7b2dbabf6d366dbbf754ba3bb5327e9155d5b3b2a2e524535a31a4170277",
+      "bytes": 547
+    },
+    {
+      "path": "scripts/studio-project.mjs",
+      "sha256": "c98d89ff0eadc20c350bfa655867840ee1d3f19860e7d42f98f0f5a318267685",
+      "bytes": 2448
+    },
+    {
+      "path": "scripts/studio-service.mjs",
+      "sha256": "f7352782c7eba495a05f9c8442d6ca3f75d8cd36de7c7e5fe8d903cf83346920",
+      "bytes": 3737
     },
     {
       "path": "scripts/subtitle-overlap-review.mjs",
@@ -413,8 +444,8 @@
     },
     {
       "path": "skills/overlay-studio-editor/SKILL.md",
-      "sha256": "089277de124844f5adf3bdace10d03c336ce86c55a78d6a0536485e2cb11b501",
-      "bytes": 5423
+      "sha256": "e2d21f277dad1d7f9a664a26c7b974bfdd40f05a81c9c9cf12ee92bae22cc025",
+      "bytes": 5941
     },
     {
       "path": "skills/overlay-studio-editor/references/分层渲染与圆窗.md",
@@ -778,7 +809,7 @@
     },
     {
       "path": "templates/catalog.json",
-      "sha256": "4324cd6ab6c5238e85f2190d389622220ca78980034ca1242ecb3675cb1bf1c6",
+      "sha256": "bfc2c1a07d0a06e4213d06b1bf58eced2acf02fa908319eeaba533a8a18343c4",
       "bytes": 12791
     },
     {
@@ -977,6 +1008,16 @@
       "bytes": 6783
     },
     {
+      "path": "tests/studio-connection.test.mjs",
+      "sha256": "acb599164c40f19ab6e7802f6929d7f0b38e09e06cd9bf35109890bc2abc2ea7",
+      "bytes": 2560
+    },
+    {
+      "path": "tests/studio-service-smoke.mjs",
+      "sha256": "eae3adbd304ad36e8fb33d9586eb4e623183d60c945e60626cae4a99fbe6e308",
+      "bytes": 1908
+    },
+    {
       "path": "tests/subtitle-overlap-review.test.mjs",
       "sha256": "03d1c891a6c1180f8c2535af5a189a24262040cbc72d2019b2e079446a9afed6",
       "bytes": 894
@@ -1023,8 +1064,8 @@
     },
     {
       "path": "vite.config.ts",
-      "sha256": "ce9eadd3a7d110b790dcaeac131c7a2b59a58563e4653b01ac1fa1fd97c382c5",
-      "bytes": 489
+      "sha256": "0020f5aef8336e531791ce1425477f41190a2e3406e642fd04d45f7a13ba2e94",
+      "bytes": 575
     },
     {
       "path": "启动工作台.cmd",
@@ -1033,13 +1074,13 @@
     },
     {
       "path": "启动工作台.command",
-      "sha256": "7bba0d8485144f920f264c76cec9da8bd6a92cf3e1cb0e2066e16f4e3e79060a",
-      "bytes": 380
+      "sha256": "cb552e3a33572fb07a4cb86e5eccd33d2923a72677865aade6f63e5d8163f796",
+      "bytes": 355
     },
     {
       "path": "安装与使用说明.md",
-      "sha256": "a8cc07675cc6df420268fc027f8a6909e22dca1ac4e757f3f3fabf4ec7348c96",
-      "bytes": 6838
+      "sha256": "b51a2c038a7d5f469e4dbdf0a46595e9ab0883345bd622673988c3d3bfbac721",
+      "bytes": 7111
     },
     {
       "path": "安装工作台.cmd",
@@ -1048,8 +1089,8 @@
     },
     {
       "path": "安装工作台.command",
-      "sha256": "a46bc8da91414df791281307e706fa980fc82d6dae6c9937460b288cb03bb55b",
-      "bytes": 31199
+      "sha256": "5be989617679350c711db57c49cd0b9c5b6f20eb6490d72adfab4414769012cd",
+      "bytes": 315
     }
   ]
 }

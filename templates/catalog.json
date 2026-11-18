@@ -1,6 +1,6 @@
 {
   "schema": "overlay-studio/template-catalog@1",
-  "generatedAt": "2026-11-05T08:10:25.127Z",
+  "generatedAt": "2026-11-18T14:26:19.452Z",
   "generator": "scripts/template-catalog.mjs",
   "sourceOfTruth": "templates/*/*/manifest.json（本文件为派生汇总，请勿手工编辑；改模板后重新生成）",
   "workbenchRoot": ".",

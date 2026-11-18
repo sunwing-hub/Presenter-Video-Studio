@@ -1,3 +1,4 @@
+import {inspectStudio} from './studio-connection.mjs'
 import {studioOrigin} from './studio-origin.mjs'
 // Reusable assistant entry; works with any saved native project, not one topic.
 // node scripts/render-studio-project.mjs project.json output.mp4 [--validate-only]
@@ -15,6 +16,7 @@ const output=resolve(destination),payload=validateExport({kind:'mp4',mainMediaId
 if(process.argv.includes('--validate-only')){console.log(JSON.stringify({status:'validated',duration:payload.duration,canvas:payload.project.canvas,layers:payload.project.canvasLayers.length}));process.exit(0)}
 if(await stat(output).then(()=>true).catch(()=>false))throw Error('输出已存在，请使用新的版本名')
 await mkdir(dirname(output),{recursive:true})
+const connection=await inspectStudio(origin);if(connection.state!=='ready')throw Error('工作台未启动或属于另一安装目录，请先运行 npm run service:start，并核对 STUDIO_ORIGIN')
 const r=await fetch(origin+'/__studio/export',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}),started=await r.json();if(!r.ok)throw Error(started.error)
 await writeFile(output+'.job.json',JSON.stringify({id:started.id,input:resolve(input),payload},null,2),{flag:'wx'});console.log('Started',started.id)
 let last=-1,job
