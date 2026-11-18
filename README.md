@@ -1,12 +1,12 @@
 # Presenter Video Studio · 剪辑工作台与知识讲解模板中心
 
-> **测试中，尚非正式版。** 当前不提供正式 GitHub Release。测试时请使用 Code → Download ZIP 获取源码，解压后按说明安装。文中的版本号用于区分测试构建，不代表正式验收；可直接下载下方源码包和独立 Skill 包。
+> **正式版 v2026.11.18。** [前往正式发布页](https://github.com/sunwing-hub/Presenter-Video-Studio/releases/tag/v2026.11.18)，下载完整工作台与独立 Skill 包，完整解压后按指南安装。
 
 本地运行的 AI 辅助视频制作工具，包含可编辑剪辑工作台、模板中心与可独立导入的 Skill。支持 WorkBuddy、Codex 等具备本地文件和命令执行能力的桌面助手接入。AI 组织内容与编排，工作台保存工程、预览并原生导出。
 
-## 当前测试构建：2026.11.18-workbuddy-test
+## 当前正式版：v2026.11.18
 
-[下载完整工作台 ZIP](https://github.com/sunwing-hub/Presenter-Video-Studio/archive/refs/heads/main.zip) · [下载 Skill ZIP](downloads/overlay-studio-editor-skill.zip) · [WorkBuddy 完整接入说明](docs/WorkBuddy接入.md)
+[下载完整工作台 ZIP](https://github.com/sunwing-hub/Presenter-Video-Studio/releases/download/v2026.11.18/Presenter-Video-Studio-2026.11.18.zip) · [下载 Skill ZIP](https://github.com/sunwing-hub/Presenter-Video-Studio/releases/download/v2026.11.18/overlay-studio-editor-skill-2026.11.18.zip) · [WorkBuddy 完整接入说明](docs/WorkBuddy接入.md)
 
 修复 macOS 安装入口损坏及启动端口不一致；安装锁定指定 pnpm 版本。新增后台启停、实例身份与连接记录、从模板建立草稿及保存修订的助手命令，避免服务随终端退出、连错安装目录。源码 ZIP 完整解压后即可安装，无需云端部署或额外 MCP。后台服务需在重启后重新启动。
 
@@ -46,7 +46,7 @@
 需要 Node.js 22.18 或以上，建议使用 Node.js 24。安装依赖与 Chromium 需要联网。完整解压后操作：
 
 - macOS：双击 `安装工作台.command`，完成后双击 `启动工作台.command`。
-- Windows：使用同名 `.cmd`。已提供入口，本次没有在实体 Windows 机器上验收。
+- Windows：使用同名 `.cmd`。已提供入口，Windows 已通过云端安装与自动检查，未进行全部客户端实机验收。
 - 命令行：在项目目录运行以下命令。
 
 ```sh
@@ -104,7 +104,7 @@ node scripts/template-catalog.mjs --check
 
 ## 第三方与授权
 
-见 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)。本仓库现已公开，供下载测试；公开可见不等于授予新的开源许可；能访问仓库或下载程序不等于所有第三方素材均获再分发授权。
+见 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)。本仓库现已公开，供下载使用；公开可见不等于授予新的开源许可；能访问仓库或下载程序不等于所有第三方素材均获再分发授权。
 
 ## 2026.11.5-r2：首次标准与模板迭代
 

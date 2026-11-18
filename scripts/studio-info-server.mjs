@@ -7,6 +7,7 @@ export function studioInfoServer(){return {name:'presenter-studio-info',configur
   res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store')
   if(req.method!=='GET'){res.statusCode=405;return res.end(JSON.stringify({error:'Method not allowed'}))}
   if(req.headers.origin&&req.headers.origin!==`http://${req.headers.host}`){res.statusCode=403;return res.end(JSON.stringify({error:'仅允许本机同源访问'}))}
-  res.end(JSON.stringify({app:'presenter-video-studio',root:studioRoot,pid:process.pid,version:JSON.parse(readFileSync(join(studioRoot,'package.json'),'utf8')).version,channel:'test'}))
+  const pkg=JSON.parse(readFileSync(join(studioRoot,'package.json'),'utf8'))
+  res.end(JSON.stringify({app:'presenter-video-studio',root:studioRoot,pid:process.pid,version:pkg.version,channel:pkg.releaseChannel||'test'}))
  })
 }}}

@@ -4,7 +4,7 @@
 
 ## 1. 下载和定位
 
-从 [GitHub 下载 ZIP](https://github.com/sunwing-hub/Presenter-Video-Studio/archive/refs/heads/main.zip)，完整解压到长期保留的文件夹，不在压缩包内运行。根目录包含 `package.json`、`scripts/studio-launcher.mjs`、`templates/`。目录名可以含中文与空格。
+从 [正式发布页](https://github.com/sunwing-hub/Presenter-Video-Studio/releases/tag/v2026.11.18) 下载 `Presenter-Video-Studio-2026.11.18.zip`，完整解压到长期保留的文件夹，不在压缩包内运行。根目录包含 `package.json`、`scripts/studio-launcher.mjs`、`templates/`。目录名可以含中文与空格。
 
 将这个文件夹加入 WorkBuddy 可访问的工作空间。下面命令均在该目录执行；也可以用绝对路径调用脚本，脚本会自行定位根目录。不假设作者路径，也不将 5174、5187 等历史端口写死。
 

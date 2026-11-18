@@ -1,6 +1,6 @@
 {
-  "version": "2026.11.18-workbuddy-test",
-  "releaseStatus": "testing",
+  "version": "2026.11.18",
+  "releaseStatus": "stable",
   "files": [
     {
       "path": ".github/workflows/test-build.yml",
@@ -14,18 +14,18 @@
     },
     {
       "path": "CHANGELOG.md",
-      "sha256": "afa2412ccdfa59833ffe252335c89d0196eb771b37ff730664971d5dacff714a",
-      "bytes": 2109
+      "sha256": "99ac388f8e9208afde5c9d758a13fd14d40ce6082c9c3f92b00116d067e56557",
+      "bytes": 2604
     },
     {
       "path": "README.md",
-      "sha256": "044ceac322c979bf7743b3ff1df51f04614694a4f5c195b38d6071de02e76c14",
-      "bytes": 8520
+      "sha256": "d19f904dba6ccb1f9487bc2f53ebd2bbf4c81d7abab2efdb08d3f5e42031c5b0",
+      "bytes": 8599
     },
     {
       "path": "RELEASE-VALIDATION.md",
-      "sha256": "1073369c98c63c7a58190165643dd09537ad27e3731ad9e139bf4a88089c1bd3",
-      "bytes": 4261
+      "sha256": "be6adbf047114d18323394c46def3c8de4528f5de24503f14fa1127380a65313",
+      "bytes": 4863
     },
     {
       "path": "THIRD-PARTY-NOTICES.md",
@@ -34,8 +34,8 @@
     },
     {
       "path": "docs/WorkBuddy接入.md",
-      "sha256": "066f9d70837ab6314eed72549e81839c3b2a3f87a0a7b73ca5a5d50ec12f9e2a",
-      "bytes": 5751
+      "sha256": "0349dae5b1287ff4cf1e472d77b12f4badc7a9fc8f61eabef3c5f4356ae92b00",
+      "bytes": 5793
     },
     {
       "path": "docs/images/template-center.png",
@@ -74,8 +74,8 @@
     },
     {
       "path": "package.json",
-      "sha256": "9cb4f4270cd497e0ab31c57434a7ed27acf65d6f6e380a74846e01564335d549",
-      "bytes": 1189
+      "sha256": "cae7e5c912eebcbff885157bf8807d6dbf6d91c166a9f0c7b9883abdb03d25e0",
+      "bytes": 1217
     },
     {
       "path": "pnpm-lock.yaml",
@@ -289,8 +289,8 @@
     },
     {
       "path": "scripts/package-release.py",
-      "sha256": "3a5f957a172a122f1e46e73ae0e5ab553d5b165e90d4d40646345ac19d558e02",
-      "bytes": 3108
+      "sha256": "59f6fa113c78ae0ef8833d7c4abe4464267d60ae794065b7c5053c758d71b875",
+      "bytes": 3534
     },
     {
       "path": "scripts/preferences.d.mts",
@@ -379,8 +379,8 @@
     },
     {
       "path": "scripts/studio-info-server.mjs",
-      "sha256": "cd8098450bc7ae1556c10efcb04ad7800173ca726e619585dde520e7be5fb359",
-      "bytes": 915
+      "sha256": "48c50926d33584f7295487fb76e35fe0c9cac213318a525aea55042023ebdf83",
+      "bytes": 951
     },
     {
       "path": "scripts/studio-launcher.mjs",
@@ -1079,8 +1079,8 @@
     },
     {
       "path": "安装与使用说明.md",
-      "sha256": "b51a2c038a7d5f469e4dbdf0a46595e9ab0883345bd622673988c3d3bfbac721",
-      "bytes": 7111
+      "sha256": "17bd690edd69e816f1a0387f77ad8f52670d5ccd3c2c11b209984325b500ed41",
+      "bytes": 7065
     },
     {
       "path": "安装工作台.cmd",

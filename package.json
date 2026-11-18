@@ -1,7 +1,7 @@
 {
   "name": "presenter-video-studio",
   "private": true,
-  "version": "2026.11.18-1",
+  "version": "2026.11.18",
   "type": "module",
   "scripts": {
     "test": "node scripts/run-tests.mjs",
@@ -33,5 +33,6 @@
   "engines": {
     "node": ">=22.18.0"
   },
-  "packageManager": "pnpm@11.25.0"
+  "packageManager": "pnpm@11.25.0",
+  "releaseChannel": "stable"
 }
