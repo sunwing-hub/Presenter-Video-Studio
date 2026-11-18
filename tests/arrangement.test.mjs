@@ -1,7 +1,8 @@
 import { readFileSync } from 'node:fs'
 import assert from 'node:assert/strict'
 import { parseSrt, validateCues, draftCards, validatePlan, isLayerActive, matchReferenceMotion, scriptTemplates } from '../src/arrangement.ts'
-const fixture = readFileSync(new URL('./fixtures/arrangement.srt', import.meta.url), 'utf8')
+// Git may check out the fixture with CRLF on Windows. Normalize before testing a CRLF export.
+const fixture = readFileSync(new URL('./fixtures/arrangement.srt', import.meta.url), 'utf8').replace(/\r\n?/g, '\n')
 const { cues, warnings } = parseSrt('\uFEFF' + fixture.replaceAll('\n', '\r\n'))
 assert.equal(cues.length, 8)
 assert.deepEqual(warnings, [])

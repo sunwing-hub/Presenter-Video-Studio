@@ -884,8 +884,8 @@
     },
     {
       "path": "tests/arrangement.test.mjs",
-      "sha256": "1fabe0d93bbae3e97d1aa211d4bcc757c5847c404dacaca569caa33e5c4f074a",
-      "bytes": 7967
+      "sha256": "714115bc94e8f2218a8ec677131fb7f109bc39a466c694e36b8f1da28edb68b0",
+      "bytes": 8086
     },
     {
       "path": "tests/audio-sync-loop.test.mjs",
